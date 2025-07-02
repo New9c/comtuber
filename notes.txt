@@ -1,0 +1,28 @@
+eyes -> open, closed
+brows -> default, raised, squint
+mouth -> open, smile, frown, neutral
+
+odo -> talking
+ods -> default
+odf -> sad
+odn -> _
+oro -> wow
+ors -> wow
+orf -> sadge
+orn -> stunned
+oso -> uhh
+oss -> smirk
+osf -> mad
+osn -> mhm
+cdo -> b_talking
+cds -> sleep
+cdf -> cry
+cdn -> tri_
+cro -> yawn
+crs -> satified
+crf -> welp
+crn -> mourn
+cso -> b_uhh
+css -> b_smirk
+csf -> confused
+csn -> hard_think
