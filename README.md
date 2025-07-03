@@ -1,8 +1,8 @@
-# vtuber
+# comtuber
 ## Cloning
 ```sh
-git clone https://github.com/New9c/vtuber
-cd vtuber
+git clone https://github.com/New9c/comtuber
+cd comtuber
 ```
 
 Works best on chromium, least amount of lag.
@@ -44,7 +44,7 @@ imgs/
 All it really is is binding a type of facial feature to a face, so you can modify it in the js script.
 Then run:
 ```sh
-cd /path/to/vtuber
+cd /path/to/comtuber
 python -m http.server <port_number>
 ```
 `port_number` can be 8000, 7777 or something else, defaults to 8000 if not filled.

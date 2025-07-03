@@ -128,7 +128,7 @@ function imagepicker(el, blendShapes) {
 	let frowning = landmarks[30].score >= frownThre && landmarks[31].score >= frownThre;
 
 
-	let imgArr = ["talking.png", "default.png", "sad.png", "_.png", "wow.png", "wow.png", "sadge.png", "stunned.png", "haha.png", "smirk.png", "mad.png", "mhm.png", "b_talking.png", "sleep.png", "cry.png", "tri_.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "haha.png", "b_smirk.png", "confused.png", "hard_think.png"];
+	let imgArr = ["talking.png", "default.png", "sad.png", "_.png", "wow.png", "wow.png", "sadge.png", "stunned.png", "uhh.png", "smirk.png", "mad.png", "confused.png", "b_talking.png", "sleep.png", "sad.png", "confused.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "haha.png", "smirk.png", "confused.png", "confused.png"];
 	let idx = 0;
 	if (isBlinking) {
 		idx += 12
