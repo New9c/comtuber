@@ -15,7 +15,8 @@ const videoBlendShapes = document.getElementById("video-blend-shapes");
 let faceLandmarker;
 let runningMode = "IMAGE";
 let enableWebcamButton;
-let webcamRunning = false;
+let streamState = false;
+let mad = false;
 const videoWidth = 480;
 // Before we can use HandLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -35,7 +36,7 @@ async function createFaceLandmarker() {
 }
 createFaceLandmarker();
 /********************************************************************
-// Demo 2: Continuously grab image from webcam stream and detect it.
+Main comtuber functionality
 ********************************************************************/
 const video = document.getElementById("webcam");
 const canvasElement = document.getElementById("output_canvas");
@@ -59,13 +60,13 @@ function enableCam(event) {
 		console.log("Wait! faceLandmarker not loaded yet.");
 		return;
 	}
-	if (webcamRunning === true) {
-		webcamRunning = false;
-		enableWebcamButton.innerText = "C:";
+	if (streamState == false) {
+		streamState = true;
+		enableWebcamButton.innerText = "BRB";
 	}
 	else {
-		webcamRunning = true;
-		enableWebcamButton.innerText = "BRB";
+		streamState = false;
+		enableWebcamButton.innerText = "C:";
 	}
 	// getUsermedia parameters.
 	const constraints = {
@@ -77,6 +78,10 @@ function enableCam(event) {
 		video.addEventListener("loadeddata", predictWebcam);
 	});
 }
+document.getElementById("avatar").addEventListener("click", function() {
+	mad = !mad
+	console.log("Mood Swapped!");
+});
 let lastVideoTime = -1;
 let results = undefined;
 const drawingUtils = new DrawingUtils(canvasCtx);
@@ -101,10 +106,10 @@ async function predictWebcam() {
 	imagepicker(videoBlendShapes, results.faceBlendshapes);
 	// drawBlendShapes(videoBlendShapes, results.faceBlendshapes);
 	// Call this function again to keep predicting when the browser is ready.
-	if (webcamRunning === true) {
+	if (streamState === true) {
 		window.requestAnimationFrame(predictWebcam);
 	} else {
-		document.getElementById('avatar').src = "https://comtuber.vercel.app/imgs/BRB.png";
+		document.getElementById('avatar').src = "imgs/BRB.png";
 	}
 }
 
@@ -114,7 +119,7 @@ function imagepicker(el, blendShapes) {
 	}
 	const landmarks = blendShapes[0].categories;
 	const blinkThre = 0.5;
-	const raiseBrowThre = 0.8;
+	const raiseBrowThre = 0.7;
 	const squintThre = 0.02;
 	const jawThre = 0.1;
 	const smileThre = 0.001;
@@ -128,7 +133,8 @@ function imagepicker(el, blendShapes) {
 	let frowning = landmarks[30].score >= frownThre && landmarks[31].score >= frownThre;
 
 
-	let imgArr = ["talking.png", "default.png", "sad.png", "_.png", "wow.png", "wow.png", "sadge.png", "stunned.png", "uhh.png", "smirk.png", "mad.png", "confused.png", "b_talking.png", "sleep.png", "sad.png", "confused.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "haha.png", "smirk.png", "confused.png", "confused.png"];
+	let defArr = ["talking.png", "default.png", "sad.png", "_.png", "wow.png", "stunned.png", "stunned.png", "stunned.png", "haha.png", "smirk.png", "confused.png", "mhm.png", "talking.png", "sleep.png", "sad.png", "tri_.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "haha.png", "smirk.png", "confused.png", "confused.png"];
+	let madArr = ["_talking.png", "_.png", "pissed.png", "_.png", "wow.png", "stunned.png", "stunned.png", "stunned.png", "uhh.png", "mhm.png", "pissed.png", "mhm.png", "_talking.png", "tri_.png", "pissed.png", "mhm.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "uhh.png", "mhm.png", "mad.png", "mhm.png"];
 	let idx = 0;
 	if (isBlinking) {
 		idx += 12
@@ -148,9 +154,9 @@ function imagepicker(el, blendShapes) {
 			idx += 2
 		}
 	}
-	document.getElementById('avatar').src = "https://comtuber.vercel.app/imgs/" + imgArr[idx];
+	document.getElementById('avatar').src = "imgs/" + (mad ? madArr[idx] : defArr[idx]);
 }
-
+/*
 function drawBlendShapes(el, blendShapes) {
 	if (!blendShapes.length) {
 		return;
@@ -159,11 +165,12 @@ function drawBlendShapes(el, blendShapes) {
 	let htmlMaker = "";
 	blendShapes[0].categories.map((shape) => {
 		htmlMaker += `
-      <li class="blend-shapes-item">
-        <span class="blend-shapes-label">${shape.displayName || shape.categoryName}</span>
-        <span class="blend-shapes-value" style="width: calc(${+shape.score * 100}% - 120px)">${(+shape.score).toFixed(4)}</span>
-      </li>
-    `;
+	  <li class="blend-shapes-item">
+		<span class="blend-shapes-label">${shape.displayName || shape.categoryName}</span>
+		<span class="blend-shapes-value" style="width: calc(${+shape.score * 100}% - 120px)">${(+shape.score).toFixed(4)}</span>
+	  </li>
+	`;
 	});
 	el.innerHTML = htmlMaker;
 }
+*/
