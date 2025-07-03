@@ -104,7 +104,7 @@ async function predictWebcam() {
 	if (webcamRunning === true) {
 		window.requestAnimationFrame(predictWebcam);
 	} else {
-		document.getElementById('avatar').src = "imgs/BRB.png";
+		document.getElementById('avatar').src = "https://comtuber.vercel.app/imgs/BRB.png";
 	}
 }
 
@@ -148,7 +148,7 @@ function imagepicker(el, blendShapes) {
 			idx += 2
 		}
 	}
-	document.getElementById('avatar').src = "imgs/" + imgArr[idx];
+	document.getElementById('avatar').src = "https://comtuber.vercel.app/imgs/" + imgArr[idx];
 }
 
 function drawBlendShapes(el, blendShapes) {
