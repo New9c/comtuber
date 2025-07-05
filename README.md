@@ -21,7 +21,6 @@ imgs/
 ├── confused.png
 ├── cry.png
 ├── default.png
-├── Frame.png (Optional)
 ├── haha.png
 ├── hard_think.png
 ├── mad.png
