@@ -85,7 +85,23 @@ document.getElementById("avatar").addEventListener("click", function() {
 let lastVideoTime = -1;
 let results = undefined;
 const drawingUtils = new DrawingUtils(canvasCtx);
-async function predictWebcam() {
+
+let lastFrameTime = 0;
+const targetFPS = 10;
+const frameInterval = 1000 / targetFPS;
+
+async function predictWebcam(timestamp) {
+	// Time checker: only proceed if enough time has passed
+	if (timestamp - lastFrameTime < frameInterval) {
+		if (streamState === true) {
+			window.requestAnimationFrame(predictWebcam);
+		} else {
+			document.getElementById('avatar').src = "imgs/BRB.png";
+		}
+		return;
+	}
+	console.log("Interval:", frameInterval, "Elapsed since last frame:", timestamp - lastFrameTime);
+	lastFrameTime = timestamp; // Update last frame time
 	const radio = video.videoHeight / video.videoWidth;
 	video.style.width = videoWidth + "px";
 	video.style.height = videoWidth * radio + "px";
