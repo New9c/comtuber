@@ -45,29 +45,13 @@ const canvasCtx = canvasElement.getContext("2d");
 function hasGetUserMedia() {
 	return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
-// If webcam supported, add event listener to button for when user
-// wants to activate it.
-if (hasGetUserMedia()) {
-	enableWebcamButton = document.getElementById("webcamButton");
-	enableWebcamButton.addEventListener("click", enableCam);
-}
-else {
-	console.warn("getUserMedia() is not supported by your browser");
-}
 // Enable the live webcam view and start detection.
 function enableCam(event) {
 	if (!faceLandmarker) {
 		console.log("Wait! faceLandmarker not loaded yet.");
 		return;
 	}
-	if (streamState == false) {
-		streamState = true;
-		enableWebcamButton.innerText = "BRB";
-	}
-	else {
-		streamState = false;
-		enableWebcamButton.innerText = "C:";
-	}
+	streamState = !streamState;
 	// getUsermedia parameters.
 	const constraints = {
 		video: true
@@ -81,6 +65,11 @@ function enableCam(event) {
 document.getElementById("avatar").addEventListener("click", function() {
 	mad = !mad
 	console.log("Mood Swapped!");
+});
+document.getElementById("avatar").addEventListener("contextmenu", function() {
+	event.preventDefault();
+	enableCam();
+	console.log("Toggled Cam");
 });
 let lastVideoTime = -1;
 let results = undefined;
@@ -119,7 +108,7 @@ async function predictWebcam(timestamp) {
 		lastVideoTime = video.currentTime;
 		results = faceLandmarker.detectForVideo(video, startTimeMs);
 	}
-	imagepicker(videoBlendShapes, results.faceBlendshapes);
+	imagepicker(results.faceBlendshapes);
 	// drawBlendShapes(videoBlendShapes, results.faceBlendshapes);
 	// Call this function again to keep predicting when the browser is ready.
 	if (streamState === true) {
@@ -129,7 +118,7 @@ async function predictWebcam(timestamp) {
 	}
 }
 
-function imagepicker(el, blendShapes) {
+function imagepicker(blendShapes) {
 	if (!blendShapes.length) {
 		return;
 	}
