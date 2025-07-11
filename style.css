@@ -15,7 +15,7 @@ limitations under the License. */
 
 body {
 	font-family: helvetica, arial, sans-serif;
-	color: #3d3d3d;
+	color: #ffffff;
 	background-color: #1b1c27;
 	--mdc-theme-primary: #1b1c27;
 	--mdc-theme-on-primary: #f1f3f4;
@@ -52,8 +52,10 @@ header,
 footer {
 	clear: both;
 }
+
 .avatar {
-	background-color: #00ff00;
+	background-color: transparent;
+	border-radius: 5px;
 }
 
 .removed {

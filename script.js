@@ -59,12 +59,16 @@ const canvasCtx = canvasElement.getContext("2d");
 function hasGetUserMedia() {
 	return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 }
-function toggleCam(event) {
+function toggleCam() {
 	streamOn = !streamOn;
-	if (streamOn){
+	if (streamOn) {
 		startCam();
 	}
 }
+document.getElementById("applyBtn").addEventListener("click", function() {
+	changeBackground();
+	changeRadius();
+});
 avatar.addEventListener("click", function() {
 	mad = !mad
 	console.log("Mood Swapped!");
@@ -95,7 +99,7 @@ async function predictWebcam(timestamp) {
 		requestFrame();
 		return;
 	}
-	console.log("Interval:", frameInterval, "Elapsed since last frame:", timestamp - lastFrameTime);
+	//console.log("Interval:", frameInterval, "Elapsed since last frame:", timestamp - lastFrameTime);
 	lastFrameTime = timestamp; // Update last frame time
 
 	let startTimeMs = performance.now();
@@ -107,7 +111,7 @@ async function predictWebcam(timestamp) {
 	drawBlendShapes(videoBlendShapes, results.faceBlendshapes);
 	requestFrame();
 }
-function setupCanvas(){
+function setupCanvas() {
 	const radio = video.videoHeight / video.videoWidth;
 	video.style.width = videoWidth + "px";
 	video.style.height = videoWidth * radio + "px";
@@ -164,7 +168,7 @@ function drawBlendShapes(el, blendShapes) {
 	if (!blendShapes.length) {
 		return;
 	}
-	console.log(blendShapes[0]);
+	//console.log(blendShapes[0]);
 	let htmlMaker = "";
 	blendShapes[0].categories.map((shape) => {
 		htmlMaker += `
@@ -175,4 +179,15 @@ function drawBlendShapes(el, blendShapes) {
 	`;
 	});
 	el.innerHTML = htmlMaker;
+}
+function changeBackground() {
+	const input = document.getElementById('bgcolor').value.trim();
+	// Simple validation for hex color format # followed by 3 or 6 hex digits
+	const isValidHex = /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(input);
+	avatar.style.backgroundColor = isValidHex ? input : "transparent"
+}
+
+function changeRadius() {
+	const input = document.getElementById('radius').value.trim();
+	avatar.style.borderRadius = input;
 }

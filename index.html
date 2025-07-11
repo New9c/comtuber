@@ -23,8 +23,7 @@ limitations under the License. -->
 	<meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-	<link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
-		rel="stylesheet">
+	<link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
 	<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 </head>
 
@@ -43,5 +42,12 @@ limitations under the License. -->
 		</div>
 
 	</section>
+	<br><label for="bgcolor">Background color (hex, any other val will be transparent): </label> <br>
+	<input type="text" id="bgcolor" placeholder="#ffffff" maxlength="7" /> <br>
+	<label for="radius">Roundness (border-radius): </label> <br>
+	<input type="text" id="radius" placeholder="10px" maxlength="15" /> <br>
+	<button id="applyBtn">Apply</button>
+
 </body>
+
 </html>
