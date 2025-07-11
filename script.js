@@ -9,15 +9,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3";
-const { FaceLandmarker, FilesetResolver, DrawingUtils } = vision;
-const demosSection = document.getElementById("demos");
+const { FaceLandmarker, FilesetResolver } = vision;
 const videoBlendShapes = document.getElementById("video-blend-shapes");
 let faceLandmarker;
 const runningMode = "VIDEO";
 let streamOn = true;
-let mad = false;
 const videoWidth = 480;
-const faces = {
+let faces = {
 	"ds": "imgs/default.png",
 	"df": "imgs/sad.png",
 	"dn": "imgs/_.png",
@@ -31,9 +29,8 @@ const faces = {
 	"sf": "imgs/confused.png",
 	"sn": "imgs/mhm.png",
 	"so": "imgs/haha.png",
-	"bso": "imgs/uhh.png",
-	"bsop": "imgs/uhh.png",
 	"sop": "imgs/uhh.png",
+	"bsop": "imgs/uhh.png",
 }
 // Before we can use HandLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -61,7 +58,6 @@ async function createFaceLandmarker() {
 		runningMode,
 		numFaces: 1
 	});
-	demosSection.classList.remove("invisible");
 	// Start Cam
 	startCam();
 }
@@ -71,34 +67,38 @@ createFaceLandmarker();
 
 const video = document.getElementById("webcam");
 const avatar = document.getElementById("avatar");
+const img = document.getElementById('imgInput');
+const json = document.getElementById('jsonInput');
+const exportJSON = document.getElementById('export');
 const canvasElement = document.getElementById("output_canvas");
-const canvasCtx = canvasElement.getContext("2d");
+let modImg = null;
+let modJson = null;
 // Check if webcam access is supported.
-function hasGetUserMedia() {
-	return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-}
+function hasGetUserMedia() { return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia); }
+
 function toggleCam() {
 	streamOn = !streamOn;
 	if (streamOn) {
 		startCam();
 	}
 }
-document.getElementById("applyBtn").addEventListener("click", function() {
-	changeBackground();
-	changeRadius();
-});
+if (!hasGetUserMedia()) document.getElementById("faceCode").innerText = "NO CAMERA FOUND D:";
+
+document.getElementById("oriModBtn").addEventListener("click", oriModFaces);
+document.getElementById("modBtn").addEventListener("click", modFaces);
+document.getElementById("importBtn").addEventListener("click", importJSON);
+
+img.addEventListener('change', (event) => { modImg = event.target.files[0]; });
+json.addEventListener('change', (event) => { modJson = event.target.files[0]; });
+
 avatar.addEventListener("click", function() {
-	mad = !mad
-	console.log("Mood Swapped!");
-});
-avatar.addEventListener("contextmenu", function() {
 	event.preventDefault();
 	toggleCam();
 	console.log("Toggled Cam");
 });
+exportJSON.addEventListener("click", downloadJSON)
 let lastVideoTime = -1;
 let results = undefined;
-const drawingUtils = new DrawingUtils(canvasCtx);
 
 let lastFrameTime = 0;
 const targetFPS = 10;
@@ -162,38 +162,38 @@ function imagepicker(blendShapes) {
 
 	let defArr = ["talking.png", "default.png", "sad.png", "_.png", "wow.png", "stunned.png", "stunned.png", "stunned.png", "haha.png", "smirk.png", "confused.png", "mhm.png", "talking.png", "sleep.png", "sad.png", "tri_.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "haha.png", "smirk.png", "confused.png", "confused.png"];
 	let madArr = ["_talking.png", "_.png", "pissed.png", "_.png", "wow.png", "stunned.png", "stunned.png", "stunned.png", "uhh.png", "mhm.png", "pissed.png", "mhm.png", "_talking.png", "tri_.png", "pissed.png", "mhm.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "uhh.png", "mhm.png", "mad.png", "mhm.png"];
-	let theFace = "";
+	let faceCode = "";
 	if (squinted) {
-		theFace += "s";
+		faceCode += "s";
 	} else if (raisedBrow) {
-		theFace += "r";
+		faceCode += "r";
 	} else {
-		theFace += "d";
+		faceCode += "d";
 	}
 	if (openedJaw) {
-		theFace += "o";
+		faceCode += "o";
 	} else if (smiling) {
-		theFace += "s";
+		faceCode += "s";
 	} else if (frowning) {
-		theFace += "f";
+		faceCode += "f";
 	} else {
-		theFace += "n";
+		faceCode += "n";
 	}
 	if (isBlinking) {
-		theFace = "b" + theFace;
+		faceCode = "b" + faceCode;
 	}
 	if (isPucker) {
-		theFace += "p";
+		faceCode += "p";
 	}
-	document.getElementById('theFace').innerText = theFace
-	if (faces[theFace] === undefined && theFace[theFace.length - 1] === 'p') {
-		theFace = theFace.slice(0, -1);
+	document.getElementById('faceCode').innerText = faceCode
+	if (faces[faceCode] === undefined && faceCode[faceCode.length - 1] === 'p') {
+		faceCode = faceCode.slice(0, -1);
 	}
 
-	if (faces[theFace] === undefined && theFace[0] === 'b') {
-		theFace = theFace.slice(1);
+	if (faces[faceCode] === undefined && faceCode[0] === 'b') {
+		faceCode = faceCode.slice(1);
 	}
-	document.getElementById('avatar').src = faces[theFace];
+	document.getElementById('avatar').src = faces[faceCode];
 }
 function drawBlendShapes(el, blendShapes) {
 	setupCanvas();
@@ -212,14 +212,59 @@ function drawBlendShapes(el, blendShapes) {
 	});
 	el.innerHTML = htmlMaker;
 }
-function changeBackground() {
-	const input = document.getElementById('bgcolor').value.trim();
-	// Simple validation for hex color format # followed by 3 or 6 hex digits
-	const isValidHex = /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(input);
-	avatar.style.backgroundColor = isValidHex ? input : "transparent"
+function oriModFaces() {
+	const modVal = document.getElementById('face-to-mod').value.trim();
+	const url = document.getElementById('url').value.trim();
+	faces[modVal] = url;
 }
+function modFaces() {
+	const modVal = document.getElementById('face-to-mod').value.trim();
+	if (!modImg) {
+		alert('Pls upload something at least D:');
+		return;
+	}
 
-function changeRadius() {
-	const input = document.getElementById('radius').value.trim();
-	avatar.style.borderRadius = input;
+	// Only accept image files
+	if (!modImg.type.startsWith('image/')) {
+		alert('Please upload an image D:');
+		return;
+	}
+
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		faces[modVal] = e.target.result;
+		//faces[modVal] = `url(${e.target.result})`;
+	};
+	reader.readAsDataURL(modImg);
+}
+function importJSON() {
+	if (!modJson) {
+		alert('Pls choose a JSON file.');
+		return;
+	}
+
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		//try {
+		const importedFaces = JSON.parse(e.target.result);
+		faces = importedFaces; // Replace the faces object
+		alert('Faces object successfully replaced!');
+		// Optionally, update your UI here if needed
+		//} catch (err) {
+		//alert('Invalid JSON file.');
+		//}
+	};
+	reader.readAsText(modJson);
+}
+function downloadJSON() {
+	const jsonStr = JSON.stringify(faces, null, 2);
+	const blob = new Blob([jsonStr], { type: 'application/json' });
+	const url = URL.createObjectURL(blob);
+
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = "faces.json";
+	a.click();
+
+	URL.revokeObjectURL(url);
 }

@@ -20,6 +20,7 @@ limitations under the License. -->
 	<title>Comtuber</title>
 	<link rel="stylesheet" href="./style.css">
 	<script type="module" src="./script.js"></script>
+	<script type="module" src="./simples.js"></script>
 	<meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -43,12 +44,21 @@ limitations under the License. -->
 
 	</section>
 	<br>
-	<div id="theFace"></div> <br>
-	<br><label for="bgcolor">Background color (hex, any other val will be transparent): </label> <br>
+	<div id="faceCode"></div>
+	<button id="toggleFaceCode">Hide Face Code</button><br><br>
+	<label for="face-to-mod">Modify a Face: </label><br>
+	<input type="text" id="face-to-mod" placeholder="bdop" /> <br>
+	<input type="text" id="url" placeholder="imgs/talking.png"><button id="oriModBtn">Modify</button><br>
+	<input type="file" id="imgInput" accept="image/*" /><button id="modBtn">Modify</button><br>
+	<br>
+	<label for="bgcolor">Background color (hex, any other val will be transparent): </label> <br>
 	<input type="text" id="bgcolor" placeholder="#ffffff" maxlength="7" /> <br>
 	<label for="radius">Roundness (border-radius): </label> <br>
 	<input type="text" id="radius" placeholder="10px" maxlength="15" /> <br>
-	<button id="applyBtn">Apply</button>
+	<button id="applyBtn">Apply</button><br><br>
+	<button id="importBtn">Import Faces Json</button>
+	<input type="file" id="jsonInput" accept=".json" /><br>
+	<button id="export">Export Faces Json</button>
 
 </body>
 
