@@ -17,6 +17,24 @@ const runningMode = "VIDEO";
 let streamOn = true;
 let mad = false;
 const videoWidth = 480;
+const faces = {
+	"ds": "imgs/default.png",
+	"df": "imgs/sad.png",
+	"dn": "imgs/_.png",
+	"do": "imgs/talking.png",
+	"dop": "imgs/_talking.png",
+	"rs": "imgs/stunned.png",
+	"rf": "imgs/stunned.png",
+	"rn": "imgs/stunned.png",
+	"ro": "imgs/wow.png",
+	"ss": "imgs/smirk.png",
+	"sf": "imgs/confused.png",
+	"sn": "imgs/mhm.png",
+	"so": "imgs/haha.png",
+	"bso": "imgs/uhh.png",
+	"bsop": "imgs/uhh.png",
+	"sop": "imgs/uhh.png",
+}
 // Before we can use HandLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
 // get everything needed to run.
@@ -131,44 +149,58 @@ function imagepicker(blendShapes) {
 	const jawThre = 0.1;
 	const smileThre = 0.001;
 	const frownThre = 0.01;
+	const puckThre = 0.4;
 
 	let isBlinking = landmarks[9].score >= blinkThre && landmarks[10].score >= blinkThre;
 	let raisedBrow = landmarks[3].score >= raiseBrowThre && landmarks[4].score >= raiseBrowThre && landmarks[5].score >= raiseBrowThre;
 	let squinted = landmarks[1].score >= squintThre && landmarks[2].score >= squintThre;
-	let notOpenedJaw = landmarks[25].score < jawThre;
+	let openedJaw = landmarks[25].score >= jawThre;
 	let smiling = landmarks[30].score < smileThre && landmarks[31].score < smileThre;
 	let frowning = landmarks[30].score >= frownThre && landmarks[31].score >= frownThre;
+	let isPucker = landmarks[38].score >= puckThre;
 
 
 	let defArr = ["talking.png", "default.png", "sad.png", "_.png", "wow.png", "stunned.png", "stunned.png", "stunned.png", "haha.png", "smirk.png", "confused.png", "mhm.png", "talking.png", "sleep.png", "sad.png", "tri_.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "haha.png", "smirk.png", "confused.png", "confused.png"];
 	let madArr = ["_talking.png", "_.png", "pissed.png", "_.png", "wow.png", "stunned.png", "stunned.png", "stunned.png", "uhh.png", "mhm.png", "pissed.png", "mhm.png", "_talking.png", "tri_.png", "pissed.png", "mhm.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "uhh.png", "mhm.png", "mad.png", "mhm.png"];
-	let idx = 0;
+	let theFace = "";
+	if (squinted) {
+		theFace += "s";
+	} else if (raisedBrow) {
+		theFace += "r";
+	} else {
+		theFace += "d";
+	}
+	if (openedJaw) {
+		theFace += "o";
+	} else if (smiling) {
+		theFace += "s";
+	} else if (frowning) {
+		theFace += "f";
+	} else {
+		theFace += "n";
+	}
 	if (isBlinking) {
-		idx += 12
+		theFace = "b" + theFace;
 	}
-	if (raisedBrow) {
-		idx += 4
-	} else if (squinted) {
-		idx += 8
+	if (isPucker) {
+		theFace += "p";
 	}
-	if (notOpenedJaw) {
-		idx += 1
-		if (smiling) {
-			idx += 0
-		} else if (frowning) {
-			idx += 1
-		} else {
-			idx += 2
-		}
+	document.getElementById('theFace').innerText = theFace
+	if (faces[theFace] === undefined && theFace[theFace.length - 1] === 'p') {
+		theFace = theFace.slice(0, -1);
 	}
-	document.getElementById('avatar').src = "imgs/" + (mad ? madArr[idx] : defArr[idx]);
+
+	if (faces[theFace] === undefined && theFace[0] === 'b') {
+		theFace = theFace.slice(1);
+	}
+	document.getElementById('avatar').src = faces[theFace];
 }
 function drawBlendShapes(el, blendShapes) {
 	setupCanvas();
 	if (!blendShapes.length) {
 		return;
 	}
-	//console.log(blendShapes[0]);
+	console.log(blendShapes[0]);
 	let htmlMaker = "";
 	blendShapes[0].categories.map((shape) => {
 		htmlMaker += `
