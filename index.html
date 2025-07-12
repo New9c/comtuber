@@ -29,7 +29,12 @@ limitations under the License. -->
 </head>
 
 <body>
-	<img class="avatar" id="avatar" src="imgs/BRB.png" loading="lazy" alt="TURN ON D SERVER">
+	<div>
+		<img class="avatar" id="avatar" src="imgs/BRB.png" loading="lazy" alt="TURN ON D SERVER"><br>
+		<button id="toggleFaceCode">Hide Face Code</button><br>
+		<div id="faceCode"></div>
+	</div>
+
 	<section id="demos" class="removed">
 		<div id="liveView" class="videoView">
 			<div style="position: relative;" class="webcam">
@@ -43,21 +48,60 @@ limitations under the License. -->
 		</div>
 
 	</section>
-	<br>
-	<div id="faceCode"></div>
-	<button id="toggleFaceCode">Hide Face Code</button><br><br>
-	<label for="face-to-mod">Modify a Face: </label><br>
-	<input type="text" id="face-to-mod" placeholder="bdop" /> <br>
-	<input type="text" id="url" placeholder="imgs/talking.png"><button id="oriModBtn">Modify</button><br>
-	<input type="file" id="imgInput" accept="image/*" /><button id="modBtn">Modify</button><br>
-	<br>
-	<label for="bgcolor">Background color (hex, any other val will be transparent): </label> <br>
-	<input type="text" id="bgcolor" placeholder="#ffffff" maxlength="7" /> <br>
-	<label for="radius">Roundness (border-radius): </label> <br>
-	<input type="text" id="radius" placeholder="10px" maxlength="15" /> <br>
-	<button id="applyBtn">Apply</button><br><br>
-	<input type="file" id="jsonInput" accept=".json" /><br>
-	<button id="export">Export Faces Json</button>
+	<div class="main">
+		<h5>Click on the image to toggle BRB, Right click the image to import your json file!</h5>
+		<label class="box">
+			<input type="checkbox" hidden>
+			<div class="box-header">Face Code</div>
+			<div class="box-content">
+			</div>
+		</label>
+		<label class="box">
+			<input type="checkbox" hidden>
+			<div class="box-header">Modifying</div>
+			<div class="box-content">
+				<label for="face-to-mod">Modify a Face: </label><br>
+				<input type="text" id="face-to-mod" placeholder="bdop" /> <br>
+				<!-- <input type="text" id="url" placeholder="imgs/talking.png"><button id="oriModBtn">Modify</button><br> -->
+				<label for="imgInput" class="files">Choose an image :3</label>
+				<input type="file" id="imgInput" accept="image/*" style="display: none;" /><button
+					id="modBtn">Modify</button><br>
+			</div>
+		</label>
+		<label class="box">
+			<input type="checkbox" hidden>
+			<div class="box-header">Settings</div>
+			<div class="box-content">
+				<label for="bgcolor">Background color (hex, any other val will be transparent): </label> <br>
+				<input type="text" id="bgcolor" placeholder="#ffffff" maxlength="7" /> <br>
+				<label for="radius">Roundness (border-radius): </label> <br>
+				<input type="text" id="radius" placeholder="10px" maxlength="15" /> <br>
+				<button id="applyBtn">Apply</button>
+			</div>
+		</label>
+		<label class="box">
+			<input type="checkbox" hidden>
+			<div class="box-header">Exporting Json</div>
+			<div class="box-content">
+				Once you feel like everything is working well, you can export your settings out as a json file!<br>
+				<input type="text" id="exportName" value="Comtuber" placeholder="Comtuber" />
+				.json
+				<label id="export" class="files">
+					Download your json :3
+				</label>
+			</div>
+		</label>
+		<label class="box">
+			<input type="checkbox" hidden>
+			<div class="box-header">Importing Json</div>
+			<div class="box-content">
+				You now can import your json file! Note that this button does the same thing as right clicking the
+				face.<br>
+				<label for="jsonInput" id="file-upload" class="files">Add your json :3</label>
+				<input type="file" id="jsonInput" accept=".json" style="display: none;" /><br>
+			</div>
+		</label>
+	</div>
 
 </body>
 

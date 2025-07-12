@@ -13,18 +13,113 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
 
-body {
-	font-family: helvetica, arial, sans-serif;
-	color: #ffffff;
-	background-color: #1b1c27;
+@import url('https://fonts.googleapis.com/css?family=Cascadia%20Mono:700|Cascadia%20Mono:400');
+
+:root {
+	--text: #d8fde1;
+	--background: #1c1b1b;
+	--primary: #0edd37;
+	--secondary: #083d81;
+	--accent: #2bffed;
+	--br: 5px;
 	--mdc-theme-primary: #1b1c27;
 	--mdc-theme-on-primary: #f1f3f4;
 }
 
+body {
+	font-family: 'Cascadia Mono';
+	font-weight: 400;
+	color: var(--text);
+	background-color: var(--background);
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+body* {
+	margin: 0.5em;
+}
+
+input {
+	font-family: 'Cascadia Mono';
+	margin: 0.5em;
+}
+
+label.files,
+button {
+	font-family: 'Cascadia Mono';
+	margin: 0.5em;
+	padding: 0.5em 2em;
+	color: var(--background);
+	border-radius: var(--br);
+	border: none;
+	display: inline-block;
+	transition: ease 0.1s;
+}
+
+button {
+	background: var(--primary);
+}
+
+#exportName {
+	margin: 0.5em 0em 0.5em 0.5em;
+}
+
+label.files {
+	background: var(--accent);
+}
+
+label.files:hover,
+button:hover {
+	transform: translateY(-1.5px);
+}
+
+.avatar:hover {
+	box-shadow: 0px 0px 3px 5px var(--primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+	font-family: 'Cascadia Mono';
+	font-weight: 700;
+}
+
+html {
+	font-size: 100%;
+}
+
+/* 16px */
+
 h1 {
-	font-style: italic;
-	color: #ff6f00;
-	color: #007f8b;
+	font-size: 4.210rem;
+	/* 67.36px */
+}
+
+h2 {
+	font-size: 3.158rem;
+	/* 50.56px */
+}
+
+h3 {
+	font-size: 2.369rem;
+	/* 37.92px */
+}
+
+h4 {
+	font-size: 1.777rem;
+	/* 28.48px */
+}
+
+h5 {
+	font-size: 1.333rem;
+	/* 21.28px */
+}
+
+small {
+	font-size: 0.750rem;
+	/* 12px */
 }
 
 h2 {
@@ -136,4 +231,31 @@ footer {
 	height: 16px;
 	align-items: center;
 	background-color: #007f8b;
+}
+
+
+.box {
+	display: block;
+	border: 1px solid var(--primary);
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.box-header {
+	background: var(--primary);
+	color: var(--background);
+	padding: 10px;
+}
+
+.box-content {
+	max-height: 0;
+	overflow: hidden;
+	transition: ease 0.5;
+	padding: 0 10px;
+}
+
+.box input:checked+.box-header+.box-content {
+	max-height: 200px;
+	/* or use max-height: 100vh for dynamic height */
+	padding: 10px;
 }
