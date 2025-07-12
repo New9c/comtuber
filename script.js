@@ -69,6 +69,7 @@ const video = document.getElementById("webcam");
 const avatar = document.getElementById("avatar");
 const img = document.getElementById('imgInput');
 const json = document.getElementById('jsonInput');
+const fileUpload = document.getElementById('file-upload');
 const exportJSON = document.getElementById('export');
 const canvasElement = document.getElementById("output_canvas");
 let modImg = null;
@@ -82,11 +83,20 @@ function toggleCam() {
 }
 if (!hasGetUserMedia()) document.getElementById("faceCode").innerText = "NO CAMERA FOUND D:";
 
-document.getElementById("oriModBtn").addEventListener("click", oriModFaces);
-document.getElementById("modBtn").addEventListener("click", modFaces);
+//document.getElementById("oriModBtn").addEventListener("click", oriModFaces);
+document.getElementById("modBtn").addEventListener("click", function() {
+	let modVal = document.getElementById('face-to-mod').value.trim();
+	modFaces(modVal)
+});
 
 img.addEventListener('change', (event) => { modImg = event.target.files[0]; });
 json.addEventListener('change', (event) => {
+	console.log('hi')
+	if (json.files.length > 0) {
+		fileUpload.textContent = json.files[0].name;
+	} else {
+		fileUpload.textContent = 'Add your file :3';
+	}
 	modJson = event.target.files[0];
 	importJSON()
 });
@@ -203,7 +213,7 @@ function drawBlendShapes(el, blendShapes) {
 	if (!blendShapes.length) {
 		return;
 	}
-	console.log(blendShapes[0]);
+	//console.log(blendShapes[0]);
 	let htmlMaker = "";
 	blendShapes[0].categories.map((shape) => {
 		htmlMaker += `
@@ -220,8 +230,7 @@ function oriModFaces() {
 	const url = document.getElementById('url').value.trim();
 	faces[modVal] = url;
 }
-function modFaces() {
-	const modVal = document.getElementById('face-to-mod').value.trim();
+function modFaces(modVal) {
 	if (!modImg) {
 		alert('Pls upload something at least D:');
 		return;
@@ -232,7 +241,6 @@ function modFaces() {
 		alert('Please upload an image D:');
 		return;
 	}
-
 	const reader = new FileReader();
 	reader.onload = (e) => {
 		faces[modVal] = e.target.result;
@@ -261,10 +269,10 @@ function downloadJSON() {
 	const jsonStr = JSON.stringify(faces, null, 2);
 	const blob = new Blob([jsonStr], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
-
+	const name = document.getElementById("exportName").value.trim() + ".json";
 	const a = document.createElement('a');
 	a.href = url;
-	a.download = "faces.json";
+	a.download = name == ".json" ? "Comtuber.json" : name;
 	a.click();
 
 	URL.revokeObjectURL(url);
