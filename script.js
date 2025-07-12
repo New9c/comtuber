@@ -78,24 +78,27 @@ function hasGetUserMedia() { return !!(navigator.mediaDevices && navigator.media
 
 function toggleCam() {
 	streamOn = !streamOn;
-	if (streamOn) {
-		startCam();
-	}
+	if (streamOn) startCam();
 }
 if (!hasGetUserMedia()) document.getElementById("faceCode").innerText = "NO CAMERA FOUND D:";
 
 document.getElementById("oriModBtn").addEventListener("click", oriModFaces);
 document.getElementById("modBtn").addEventListener("click", modFaces);
-document.getElementById("importBtn").addEventListener("click", importJSON);
 
 img.addEventListener('change', (event) => { modImg = event.target.files[0]; });
-json.addEventListener('change', (event) => { modJson = event.target.files[0]; });
+json.addEventListener('change', (event) => {
+	modJson = event.target.files[0];
+	importJSON()
+});
 
 avatar.addEventListener("click", function() {
-	event.preventDefault();
 	toggleCam();
-	console.log("Toggled Cam");
 });
+avatar.addEventListener("contextmenu", function() {
+	event.preventDefault();
+	json.click();
+});
+
 exportJSON.addEventListener("click", downloadJSON)
 let lastVideoTime = -1;
 let results = undefined;
@@ -245,14 +248,12 @@ function importJSON() {
 
 	const reader = new FileReader();
 	reader.onload = (e) => {
-		//try {
-		const importedFaces = JSON.parse(e.target.result);
-		faces = importedFaces; // Replace the faces object
-		alert('Faces object successfully replaced!');
-		// Optionally, update your UI here if needed
-		//} catch (err) {
-		//alert('Invalid JSON file.');
-		//}
+		try {
+			const importedFaces = JSON.parse(e.target.result);
+			faces = importedFaces;
+		} catch (err) {
+			alert('Invalid JSON file.');
+		}
 	};
 	reader.readAsText(modJson);
 }
