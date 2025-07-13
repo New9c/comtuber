@@ -237,6 +237,7 @@ footer {
 .box {
 	display: block;
 	border: 1px solid var(--primary);
+	margin-right: 2em;
 	margin-bottom: 10px;
 	cursor: pointer;
 }
@@ -249,8 +250,7 @@ footer {
 
 .box-content {
 	max-height: 0;
-	overflow: hidden;
-	transition: ease 0.5;
+	overflow-y: auto;
 	padding: 0 10px;
 }
 
