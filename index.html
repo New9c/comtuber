@@ -30,9 +30,27 @@ limitations under the License. -->
 
 <body>
 	<div>
-		<img class="avatar" id="avatar" src="imgs/BRB.png" loading="lazy" alt="TURN ON D SERVER"><br>
+		<img class="avatar" id="avatar" src="imgs/BRB.png" loading="lazy" alt="IMG NOT FOUND D:"><br>
 		<button id="toggleFaceCode">Hide Face Code</button><br>
-		<div id="faceCode"></div>
+		<div id="faceCode"></div><br><br><br>
+		<label class="box">
+			<input type="checkbox" hidden>
+			<div class="box-header">Setting up Comtuber in OBS</div>
+			<div class="box-content">
+				I believe the best way to set this up in OBS is with "Browser" or "Browser Source", and you'll have to
+				put the "--use-fake-ui-for-media-stream" flag to allow permissions.<br><br>
+				For Linux I use "flatpak run com.obsproject.Studio --use-fake-ui-for-media-stream".<br><br>
+				Go to "Sources" and hit '+', use "Browser" and type in "https://comtuber.vercel.app" with the height and
+				width the same as your images. The example images are 128x128px.<br><br>
+				Congrats! You are now a comtuber :D
+			</div>
+		</label>
+		<label class="box">
+			<input type="checkbox" hidden>
+			<div class="box-header">About</div>
+			<div class="box-content">
+			</div>
+		</label>
 	</div>
 
 	<section id="demos" class="removed">
@@ -49,20 +67,52 @@ limitations under the License. -->
 
 	</section>
 	<div class="main">
-		<h5>Click on the image to toggle BRB, Right click the image to import your json file!</h5>
+		<h5>Click on the face to toggle BRB, Right click the face to import your json file!</h5>
 		<label class="box">
 			<input type="checkbox" hidden>
-			<div class="box-header">Face Code</div>
+			<div class="box-header">Setup Your Faces</div>
 			<div class="box-content">
+				The default 12 faces are made via your eyebrows and mouth, the img will be set automatically :3<br>
+				First letter is (d)efault, (r)aised, (s)quint.<br>
+				Second is (s)mile, (n)etural, (f)rown, (o)pen.<br>
+				Be Right Back -> <label for="BRB" id="l-BRB" class="files">Choose an image :3</label>
+				<input type="file" id="BRB" accept="image/*" style="display: none;" /><br>
+				ds -> <label for="ds" id="l-ds" class="files">Choose an image :3</label>
+				<input type="file" id="ds" accept="image/*" style="display: none;" /><br>
+				dn -> <label for="dn" id="l-dn" class="files">Choose an image :3</label>
+				<input type="file" id="dn" accept="image/*" style="display: none;" /><br>
+				df -> <label for="df" id="l-df" class="files">Choose an image :3</label>
+				<input type="file" id="df" accept="image/*" style="display: none;" /><br>
+				do -> <label for="do" id="l-do" class="files">Choose an image :3</label>
+				<input type="file" id="do" accept="image/*" style="display: none;" /><br>
+				rs -> <label for="rs" id="l-rs" class="files">Choose an image :3</label>
+				<input type="file" id="rs" accept="image/*" style="display: none;" /><br>
+				rn -> <label for="rn" id="l-rn" class="files">Choose an image :3</label>
+				<input type="file" id="rn" accept="image/*" style="display: none;" /><br>
+				rf -> <label for="rf" id="l-rf" class="files">Choose an image :3</label>
+				<input type="file" id="rf" accept="image/*" style="display: none;" /><br>
+				ro -> <label for="ro" id="l-ro" class="files">Choose an image :3</label>
+				<input type="file" id="ro" accept="image/*" style="display: none;" /><br>
+				ss -> <label for="ss" id="l-ss" class="files">Choose an image :3</label>
+				<input type="file" id="ss" accept="image/*" style="display: none;" /><br>
+				sn -> <label for="sn" id="l-sn" class="files">Choose an image :3</label>
+				<input type="file" id="sn" accept="image/*" style="display: none;" /><br>
+				sf -> <label for="sf" id="l-sf" class="files">Choose an image :3</label>
+				<input type="file" id="sf" accept="image/*" style="display: none;" /><br>
+				so -> <label for="so" id="l-so" class="files">Choose an image :3</label>
+				<input type="file" id="so" accept="image/*" style="display: none;" /><br>
 			</div>
 		</label>
 		<label class="box">
 			<input type="checkbox" hidden>
-			<div class="box-header">Modifying</div>
+			<div class="box-header">Modifying Faces</div>
 			<div class="box-content">
-				<label for="face-to-mod">Modify a Face: </label><br>
-				<input type="text" id="face-to-mod" placeholder="bdop" /> <br>
-				<!-- <input type="text" id="url" placeholder="imgs/talking.png"><button id="oriModBtn">Modify</button><br> -->
+				Now that you have the basic 12 faces, you can add some more faces with b(blink) and
+				p(pucker).<br>
+				You can also modify existing faces :D<br><br>
+				Note that if the face code "bxxp" isn't set, it will try "bxx" then "xx", which means you may
+				need to set both "xxp" and "bxxp" for pucker.<br>
+				Face code to modify:<input type="text" id="face-to-mod" placeholder="bdop" /> <br>
 				<label for="imgInput" class="files">Choose an image :3</label>
 				<input type="file" id="imgInput" accept="image/*" style="display: none;" /><button
 					id="modBtn">Modify</button><br>
@@ -70,13 +120,37 @@ limitations under the License. -->
 		</label>
 		<label class="box">
 			<input type="checkbox" hidden>
-			<div class="box-header">Settings</div>
+			<div class="box-header">Tweaks</div>
 			<div class="box-content">
-				<label for="bgcolor">Background color (hex, any other val will be transparent): </label> <br>
+				You can set the threshold for values here, I know they are kinda all over the place, but these values
+				seem to work best for me.<br>
+				Tweak them until they can pretty accurately tell when you are/aren't showing a expression.
+				Blinking:
+				<input type="text" id="blinkThre" value="0.5" /> <br>
+				Raised Eyebrows:
+				<input type="text" id="raiseBrowThre" value="0.7" /> <br>
+				Squinting:
+				<input type="text" id="squintThre" value="0.02" /> <br>
+				Opened Mouth:
+				<input type="text" id="jawThre" value="0.1" /> <br>
+				Smiling:
+				<input type="text" id="smileThre" value="0.001" /> <br>
+				Frowning:
+				<input type="text" id="frownThre" value="0.01" /> <br>
+				Pucker:
+				<input type="text" id="puckThre" value="0.4" /> <br>
+				(Applys after you hit Enter or click away)
+			</div>
+		</label>
+		<label class="box">
+			<input type="checkbox" hidden>
+			<div class="box-header">Bg Color & Border Radius For Face</div>
+			<div class="box-content">
+				<label for="bgcolor">Background color (hex, any other value will be transparent): </label> <br>
 				<input type="text" id="bgcolor" placeholder="#ffffff" maxlength="7" /> <br>
 				<label for="radius">Roundness (border-radius): </label> <br>
 				<input type="text" id="radius" placeholder="10px" maxlength="15" /> <br>
-				<button id="applyBtn">Apply</button>
+				(Applys after you hit Enter or click away)
 			</div>
 		</label>
 		<label class="box">

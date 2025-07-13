@@ -15,22 +15,34 @@ let faceLandmarker;
 const runningMode = "VIDEO";
 let streamOn = true;
 const videoWidth = 480;
-let faces = {
-	"ds": "imgs/default.png",
-	"df": "imgs/sad.png",
-	"dn": "imgs/_.png",
-	"do": "imgs/talking.png",
-	"dop": "imgs/_talking.png",
-	"rs": "imgs/stunned.png",
-	"rf": "imgs/stunned.png",
-	"rn": "imgs/stunned.png",
-	"ro": "imgs/wow.png",
-	"ss": "imgs/smirk.png",
-	"sf": "imgs/confused.png",
-	"sn": "imgs/mhm.png",
-	"so": "imgs/haha.png",
-	"sop": "imgs/uhh.png",
-	"bsop": "imgs/uhh.png",
+let settings = {
+	"faces": {
+		"BRB": "imgs/BRB.png",
+		"ds": "imgs/default.png",
+		"df": "imgs/sad.png",
+		"dn": "imgs/_.png",
+		"do": "imgs/talking.png",
+		"dop": "imgs/_talking.png",
+		"rs": "imgs/stunned.png",
+		"rf": "imgs/stunned.png",
+		"rn": "imgs/stunned.png",
+		"ro": "imgs/wow.png",
+		"ss": "imgs/smirk.png",
+		"sf": "imgs/confused.png",
+		"sn": "imgs/mhm.png",
+		"so": "imgs/haha.png",
+		"sop": "imgs/uhh.png",
+		"bsop": "imgs/uhh.png",
+	},
+	"bgColor": "transparent",
+	"radius": "5px",
+	"blinkThre": 0.5,
+	"raiseBrowThre": 0.7,
+	"squintThre": 0.02,
+	"jawThre": 0.1,
+	"smileThre": 0.001,
+	"frownThre": 0.01,
+	"puckThre": 0.4,
 }
 // Before we can use HandLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -86,12 +98,11 @@ if (!hasGetUserMedia()) document.getElementById("faceCode").innerText = "NO CAME
 //document.getElementById("oriModBtn").addEventListener("click", oriModFaces);
 document.getElementById("modBtn").addEventListener("click", function() {
 	let modVal = document.getElementById('face-to-mod').value.trim();
-	modFaces(modVal)
+	modFaces(modVal, modImg)
 });
 
 img.addEventListener('change', (event) => { modImg = event.target.files[0]; });
 json.addEventListener('change', (event) => {
-	console.log('hi')
 	if (json.files.length > 0) {
 		fileUpload.textContent = json.files[0].name;
 	} else {
@@ -110,6 +121,19 @@ avatar.addEventListener("contextmenu", function() {
 });
 
 exportJSON.addEventListener("click", downloadJSON)
+const base12 = ["BRB", "ds", "dn", "df", "do", "rs", "rn", "rf", "ro", "ss", "sn", "sf", "so"];
+for (let i = 0; i < base12.length; i++) {
+	let deFace = document.getElementById(base12[i]);
+	let deLabel = document.getElementById("l-" + base12[i]);
+	deFace.addEventListener("change", (event) => {
+		if (deFace.files.length > 0) {
+			deLabel.textContent = deFace.files[0].name;
+		} else {
+			deLabel.textContent = 'Choose an image :3';
+		}
+		modFaces(base12[i], event.target.files[0])
+	})
+}
 let lastVideoTime = -1;
 let results = undefined;
 
@@ -121,7 +145,8 @@ function requestFrame() {
 	if (streamOn === true) {
 		window.requestAnimationFrame(predictWebcam);
 	} else {
-		avatar.src = "imgs/BRB.png";
+		avatar.src = settings.faces.BRB;
+		document.getElementById('faceCode').innerText = "Be Right Back"
 	}
 };
 async function predictWebcam(timestamp) {
@@ -138,7 +163,7 @@ async function predictWebcam(timestamp) {
 		lastVideoTime = video.currentTime;
 		results = faceLandmarker.detectForVideo(video, startTimeMs);
 	}
-	imagepicker(results.faceBlendshapes);
+	imagePicker(results.faceBlendshapes);
 	drawBlendShapes(videoBlendShapes, results.faceBlendshapes);
 	requestFrame();
 }
@@ -151,30 +176,20 @@ function setupCanvas() {
 	canvasElement.width = video.videoWidth;
 	canvasElement.height = video.videoHeight;
 }
-function imagepicker(blendShapes) {
+function imagePicker(blendShapes) {
 	if (!blendShapes.length) {
 		return;
 	}
 	const landmarks = blendShapes[0].categories;
-	const blinkThre = 0.5;
-	const raiseBrowThre = 0.7;
-	const squintThre = 0.02;
-	const jawThre = 0.1;
-	const smileThre = 0.001;
-	const frownThre = 0.01;
-	const puckThre = 0.4;
 
-	let isBlinking = landmarks[9].score >= blinkThre && landmarks[10].score >= blinkThre;
-	let raisedBrow = landmarks[3].score >= raiseBrowThre && landmarks[4].score >= raiseBrowThre && landmarks[5].score >= raiseBrowThre;
-	let squinted = landmarks[1].score >= squintThre && landmarks[2].score >= squintThre;
-	let openedJaw = landmarks[25].score >= jawThre;
-	let smiling = landmarks[30].score < smileThre && landmarks[31].score < smileThre;
-	let frowning = landmarks[30].score >= frownThre && landmarks[31].score >= frownThre;
-	let isPucker = landmarks[38].score >= puckThre;
+	let isBlinking = landmarks[9].score >= settings.blinkThre && landmarks[10].score >= settings.blinkThre;
+	let raisedBrow = landmarks[3].score >= settings.raiseBrowThre && landmarks[4].score >= settings.raiseBrowThre && landmarks[5].score >= settings.raiseBrowThre;
+	let squinted = landmarks[1].score >= settings.squintThre && landmarks[2].score >= settings.squintThre;
+	let openedJaw = landmarks[25].score >= settings.jawThre;
+	let smiling = landmarks[30].score < settings.smileThre && landmarks[31].score < settings.smileThre;
+	let frowning = landmarks[30].score >= settings.frownThre && landmarks[31].score >= settings.frownThre;
+	let isPucker = landmarks[38].score >= settings.puckThre;
 
-
-	let defArr = ["talking.png", "default.png", "sad.png", "_.png", "wow.png", "stunned.png", "stunned.png", "stunned.png", "haha.png", "smirk.png", "confused.png", "mhm.png", "talking.png", "sleep.png", "sad.png", "tri_.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "haha.png", "smirk.png", "confused.png", "confused.png"];
-	let madArr = ["_talking.png", "_.png", "pissed.png", "_.png", "wow.png", "stunned.png", "stunned.png", "stunned.png", "uhh.png", "mhm.png", "pissed.png", "mhm.png", "_talking.png", "tri_.png", "pissed.png", "mhm.png", "yawn.png", "satisfied.png", "welp.png", "mourn.png", "uhh.png", "mhm.png", "mad.png", "mhm.png"];
 	let faceCode = "";
 	if (squinted) {
 		faceCode += "s";
@@ -199,14 +214,14 @@ function imagepicker(blendShapes) {
 		faceCode += "p";
 	}
 	document.getElementById('faceCode').innerText = faceCode
-	if (faces[faceCode] === undefined && faceCode[faceCode.length - 1] === 'p') {
+	if (settings.faces[faceCode] === undefined && faceCode[faceCode.length - 1] === 'p') {
 		faceCode = faceCode.slice(0, -1);
 	}
 
-	if (faces[faceCode] === undefined && faceCode[0] === 'b') {
+	if (settings.faces[faceCode] === undefined && faceCode[0] === 'b') {
 		faceCode = faceCode.slice(1);
 	}
-	document.getElementById('avatar').src = faces[faceCode];
+	document.getElementById('avatar').src = settings.faces[faceCode];
 }
 function drawBlendShapes(el, blendShapes) {
 	setupCanvas();
@@ -225,28 +240,23 @@ function drawBlendShapes(el, blendShapes) {
 	});
 	el.innerHTML = htmlMaker;
 }
-function oriModFaces() {
-	const modVal = document.getElementById('face-to-mod').value.trim();
-	const url = document.getElementById('url').value.trim();
-	faces[modVal] = url;
-}
-function modFaces(modVal) {
-	if (!modImg) {
+function modFaces(modVal, theImg) {
+	if (!theImg) {
 		alert('Pls upload something at least D:');
 		return;
 	}
 
 	// Only accept image files
-	if (!modImg.type.startsWith('image/')) {
+	if (!theImg.type.startsWith('image/')) {
 		alert('Please upload an image D:');
 		return;
 	}
 	const reader = new FileReader();
 	reader.onload = (e) => {
-		faces[modVal] = e.target.result;
-		//faces[modVal] = `url(${e.target.result})`;
+		settings.faces[modVal] = e.target.result;
+		//settings.faces[modVal] = `url(${e.target.result})`;
 	};
-	reader.readAsDataURL(modImg);
+	reader.readAsDataURL(theImg);
 }
 function importJSON() {
 	if (!modJson) {
@@ -257,8 +267,8 @@ function importJSON() {
 	const reader = new FileReader();
 	reader.onload = (e) => {
 		try {
-			const importedFaces = JSON.parse(e.target.result);
-			faces = importedFaces;
+			const importedSettings = JSON.parse(e.target.result);
+			settings = importedSettings;
 		} catch (err) {
 			alert('Invalid JSON file.');
 		}
@@ -266,7 +276,7 @@ function importJSON() {
 	reader.readAsText(modJson);
 }
 function downloadJSON() {
-	const jsonStr = JSON.stringify(faces, null, 2);
+	const jsonStr = JSON.stringify(settings, null, 2);
 	const blob = new Blob([jsonStr], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
 	const name = document.getElementById("exportName").value.trim() + ".json";
@@ -276,4 +286,38 @@ function downloadJSON() {
 	a.click();
 
 	URL.revokeObjectURL(url);
+}
+
+const bgColor = document.getElementById("bgcolor")
+const radius = document.getElementById("radius")
+bgColor.addEventListener("change", changeBgColor);
+radius.addEventListener("change", changeRadius);
+
+function changeBgColor() {
+	const isValidHex = /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(bgColor.value.trim());
+	settings.bgColor = isValidHex ? input : "transparent";
+	avatar.style.backgroundColor = settings.bgColor;
+}
+function changeRadius() {
+	settings.radius = radius.value.trim();
+	avatar.style.borderRadius = settings.radius;
+}
+changeBgColor();
+changeRadius();
+
+const thres = ["blinkThre", "raiseBrowThre", "squintThre", "jawThre", "smileThre", "frownThre", "puckThre"];
+for (let i = 0; i < thres.length; i++) {
+	let deThre = document.getElementById(thres[i]);
+	deThre.addEventListener("change", function() {
+		let val = parseFloat(deThre.value);
+		if (isNaN(val)) {
+			deThre.value = settings[thres[i]];
+			return
+		}
+		val = val < 0 ? 0 : val;
+		val = val > 1 ? 1 : val;
+		settings[thres[i]] = val;
+		deThre.value = val;
+	})
+	deThre.value = settings[thres[i]];
 }

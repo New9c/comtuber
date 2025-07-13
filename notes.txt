@@ -34,3 +34,21 @@ mouth -> smile, neutral, frown, open
 (optional)eyes -> b
 (optional)puff -> p
 
+
+let faces = {
+	"ds": "imgs/default.png",
+	"df": "imgs/sad.png",
+	"dn": "imgs/_.png",
+	"do": "imgs/talking.png",
+	"dop": "imgs/_talking.png",
+	"rs": "imgs/stunned.png",
+	"rf": "imgs/stunned.png",
+	"rn": "imgs/stunned.png",
+	"ro": "imgs/wow.png",
+	"ss": "imgs/smirk.png",
+	"sf": "imgs/confused.png",
+	"sn": "imgs/mhm.png",
+	"so": "imgs/haha.png",
+	"sop": "imgs/uhh.png",
+	"bsop": "imgs/uhh.png",
+}
