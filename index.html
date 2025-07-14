@@ -19,8 +19,8 @@ limitations under the License. -->
 	<meta charset="UTF-8">
 	<title>Comtuber</title>
 	<link rel="stylesheet" href="./style.css">
-	<script type="module" src="./script.js"></script>
 	<script type="module" src="./simples.js"></script>
+	<script type="module" src="./script.js"></script>
 	<meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -31,26 +31,30 @@ limitations under the License. -->
 <body>
 	<div>
 		<img class="avatar" id="avatar" src="imgs/BRB.png" loading="lazy" alt="IMG NOT FOUND D:"><br>
-		<button id="toggleFaceCode">Hide Face Code</button><br>
+		<button id="toggleFaceCode" class="btn">Hide Face Code</button><br>
 		<div id="faceCode"></div><br><br><br>
-		<label class="box">
+		<label class="box accent">
 			<input type="checkbox" hidden>
-			<div class="box-header">About</div>
+			<div class="box-header accent">About</div>
 			<div class="box-content">
-				Comtuber: We got Vtubing at home.<br>
+				Comtuber: We got Vtubing at home.<br><br>
 				This is a free open source project that trys to show more expression than other pngtuber software
-				without turning my laptop into a jet engine or making the display a slide show.<br>
-				Here is the<a href="https://github.com/New9c/comtuber" target="_blank" class="github-button">GitHub</a>
+				without turning my laptop into a jet engine or making the display a slide show.<br><br>
+				As cool as it is, it simply is a highly modified version of<a
+					href="https://codepen.io/mediapipe-preview/pen/OJBVQJm" target="_blank"
+					class="btn github-button">this demo</a><br>
+				Here is the<a href="https://github.com/New9c/comtuber" target="_blank"
+					class="btn github-button">GitHub</a>for Comtuber :3
 			</div>
 		</label>
-		<label class="box">
+		<label class="box accent">
 			<input type="checkbox" hidden>
-			<div class="box-header">Setting up Comtuber in OBS</div>
+			<div class="box-header accent">Setting up Comtuber in OBS</div>
 			<div class="box-content">
 				I believe the best way to set this up in OBS is with "Browser", and you'll have to
 				put the "--auto-accept-camera-and-microphone-capture" flag to allow permissions.<br><br>
 				For Windows check out how to add flags<a href="https://obsproject.com/kb/launch-parameters"
-					class="launch-param">here</a><br>
+					class="btn launch-param">here</a><br>
 				For Mac just buy a model and do Vtubing instead (jk use the same link as windows)<br>
 				For Linux use flatpak: "flatpak run com.obsproject.Studio
 				--auto-accept-camera-and-microphone-capture".<br><br>
@@ -60,8 +64,33 @@ limitations under the License. -->
 				Congrats! You are now a comtuber :D<br><br>
 				If "Browser" doesn't quite work, a not as good strat is to use "Window Capture" or "Screen Capture".
 				Crop the window by holding Alt and move the edges, then using filters key out the background color.
-				<br>
+				<br><br>
 				If those don't work, consult a chatbot, restart obs, restart the computer and somehow it'll work maybe.
+			</div>
+		</label>
+		<label class="box accent">
+			<input type="checkbox" hidden>
+			<div class="box-header accent">Website Settings</div>
+			<div class="box-content">
+				<button id="resetRoot" class="btn">Reset</button><br>
+				--text:
+				<input type="text" id="text" value="#d8fde1" /> <br>
+				--background:
+				<input type="text" id="background" value="#1c1b1b" /> <br>
+				--primary:
+				<input type="text" id="primary" value="#0edd37" /> <br>
+				--accent:
+				<input type="text" id="accent" value="#2bffed" /> <br>
+				This isn't saved in the json file.
+			</div>
+		</label>
+		<label class="box red">
+			<input type="checkbox" hidden>
+			<div class="box-header red">NERDS</div>
+			<div class="box-content">
+				Type "Iwannaseemyfaceandepicstats" below to see some nerd stuff, THIS WILL SHOW YOUR FACE. Applys on
+				Enter.<br>
+				<input type="text" id="nerds" placeholder="Iwannaseemyfaceandepicstats" /> <br>
 			</div>
 		</label>
 	</div>
@@ -88,31 +117,31 @@ limitations under the License. -->
 				The default 12 faces are made via your eyebrows and mouth, the img will be set automatically :3<br>
 				First letter is (d)efault, (r)aised, (s)quint.<br>
 				Second is (s)mile, (n)etural, (f)rown, (o)pen.<br>
-				Be Right Back -> <label for="BRB" id="l-BRB" class="files">Choose an image :3</label>
+				Be Right Back -> <label for="BRB" id="l-BRB" class="files btn">Choose an image :3</label>
 				<input type="file" id="BRB" accept="image/*" style="display: none;" /><br>
-				ds -> <label for="ds" id="l-ds" class="files">Choose an image :3</label>
+				ds -> <label for="ds" id="l-ds" class="files btn">Choose an image :3</label>
 				<input type="file" id="ds" accept="image/*" style="display: none;" /><br>
-				dn -> <label for="dn" id="l-dn" class="files">Choose an image :3</label>
+				dn -> <label for="dn" id="l-dn" class="files btn">Choose an image :3</label>
 				<input type="file" id="dn" accept="image/*" style="display: none;" /><br>
-				df -> <label for="df" id="l-df" class="files">Choose an image :3</label>
+				df -> <label for="df" id="l-df" class="files btn">Choose an image :3</label>
 				<input type="file" id="df" accept="image/*" style="display: none;" /><br>
-				do -> <label for="do" id="l-do" class="files">Choose an image :3</label>
+				do -> <label for="do" id="l-do" class="files btn">Choose an image :3</label>
 				<input type="file" id="do" accept="image/*" style="display: none;" /><br>
-				rs -> <label for="rs" id="l-rs" class="files">Choose an image :3</label>
+				rs -> <label for="rs" id="l-rs" class="files btn">Choose an image :3</label>
 				<input type="file" id="rs" accept="image/*" style="display: none;" /><br>
-				rn -> <label for="rn" id="l-rn" class="files">Choose an image :3</label>
+				rn -> <label for="rn" id="l-rn" class="files btn">Choose an image :3</label>
 				<input type="file" id="rn" accept="image/*" style="display: none;" /><br>
-				rf -> <label for="rf" id="l-rf" class="files">Choose an image :3</label>
+				rf -> <label for="rf" id="l-rf" class="files btn">Choose an image :3</label>
 				<input type="file" id="rf" accept="image/*" style="display: none;" /><br>
-				ro -> <label for="ro" id="l-ro" class="files">Choose an image :3</label>
+				ro -> <label for="ro" id="l-ro" class="files btn">Choose an image :3</label>
 				<input type="file" id="ro" accept="image/*" style="display: none;" /><br>
-				ss -> <label for="ss" id="l-ss" class="files">Choose an image :3</label>
+				ss -> <label for="ss" id="l-ss" class="files btn">Choose an image :3</label>
 				<input type="file" id="ss" accept="image/*" style="display: none;" /><br>
-				sn -> <label for="sn" id="l-sn" class="files">Choose an image :3</label>
+				sn -> <label for="sn" id="l-sn" class="files btn">Choose an image :3</label>
 				<input type="file" id="sn" accept="image/*" style="display: none;" /><br>
-				sf -> <label for="sf" id="l-sf" class="files">Choose an image :3</label>
+				sf -> <label for="sf" id="l-sf" class="files btn">Choose an image :3</label>
 				<input type="file" id="sf" accept="image/*" style="display: none;" /><br>
-				so -> <label for="so" id="l-so" class="files">Choose an image :3</label>
+				so -> <label for="so" id="l-so" class="files btn">Choose an image :3</label>
 				<input type="file" id="so" accept="image/*" style="display: none;" /><br>
 			</div>
 		</label>
@@ -126,9 +155,9 @@ limitations under the License. -->
 				Note that if the face code "bxxp" isn't set, it will try "bxx" then "xx", which means you may
 				need to set both "xxp" and "bxxp" for pucker.<br>
 				Face code to modify:<input type="text" id="face-to-mod" placeholder="bdop" /> <br>
-				<label for="imgInput" class="files">Choose an image :3</label>
-				<input type="file" id="imgInput" accept="image/*" style="display: none;" /><button
-					id="modBtn">Modify</button><br>
+				<label for="imgInput" class="files btn">Choose an image :3</label>
+				<input type="file" id="imgInput" accept="image/*" style="display: none;" /><button id="modBtn"
+					class="btn">Modify</button><br>
 			</div>
 		</label>
 		<label class="box">
@@ -176,7 +205,7 @@ limitations under the License. -->
 				Once you feel like everything is working well, you can export your settings out as a json file!<br>
 				<input type="text" id="exportName" value="Comtuber" placeholder="Comtuber" />
 				.json
-				<label id="export" class="files">
+				<label id="export" class="files btn">
 					Download your json :3
 				</label>
 			</div>
@@ -187,7 +216,7 @@ limitations under the License. -->
 			<div class="box-content">
 				You can now import your json file! Note that this button does the same thing as right clicking the
 				face.<br>
-				<label for="jsonInput" id="file-upload" class="files">Add your json :3</label>
+				<label for="jsonInput" id="file-upload" class="files btn">Add your json :3</label>
 				<input type="file" id="jsonInput" accept=".json" style="display: none;" /><br>
 			</div>
 		</label>

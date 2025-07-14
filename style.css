@@ -19,12 +19,9 @@ limitations under the License. */
 	--text: #d8fde1;
 	--background: #1c1b1b;
 	--primary: #0edd37;
-	--secondary: #083d81;
 	--accent: #2bffed;
-	--br: 5px;
-	--mdc-theme-primary: #1b1c27;
-	--mdc-theme-on-primary: #f1f3f4;
 }
+
 
 body {
 	font-family: 'Cascadia Mono';
@@ -44,26 +41,20 @@ input {
 	margin: 0.5em;
 }
 
-label.files,
-.github-button,
-.launch-param,
-button {
+.btn {
 	font-family: 'Cascadia Mono';
 	margin: 0.5em;
 	padding: 0.5em 2em;
 	color: var(--background);
-	border-radius: var(--br);
+	border-radius: 5px;
 	border: none;
 	display: inline-block;
 	transition: ease 0.1s;
-}
-
-button {
 	background: var(--primary);
+	cursor: pointer;
 }
 
-
-label.files {
+.files.btn {
 	background: var(--accent);
 }
 
@@ -81,10 +72,7 @@ a.launch-param {
 	padding: 0.5em;
 }
 
-label.files:hover,
-.github-button:hover,
-.launch-param:hover,
-button:hover {
+.btn:hover {
 	transform: translateY(-1.5px);
 }
 
@@ -177,11 +165,6 @@ footer {
 }
 
 
-.note {
-	font-style: italic;
-	font-size: 130%;
-}
-
 .videoView,
 .detectOnClick,
 .blend-shapes {
@@ -249,7 +232,7 @@ footer {
 	display: flex;
 	height: 16px;
 	align-items: center;
-	background-color: #007f8b;
+	background-color: var(--primary);
 }
 
 
@@ -258,13 +241,13 @@ footer {
 	border: 1px solid var(--primary);
 	margin-right: 2em;
 	margin-bottom: 10px;
-	cursor: pointer;
 }
 
 .box-header {
 	background: var(--primary);
 	color: var(--background);
 	padding: 10px;
+	cursor: pointer;
 }
 
 .box-content {
@@ -273,8 +256,28 @@ footer {
 	padding: 0 10px;
 }
 
+.box.accent {
+	border: 1px solid var(--accent);
+}
+
+.box.accent .box-header {
+	background-color: var(--accent);
+}
+
+.box.red {
+	border: 1px solid red;
+}
+
+.box.red .box-header {
+	background-color: red;
+}
+
 .box input:checked+.box-header+.box-content {
 	max-height: 200px;
 	/* or use max-height: 100vh for dynamic height */
 	padding: 10px;
+}
+
+#nerds {
+	width: 220px;
 }
