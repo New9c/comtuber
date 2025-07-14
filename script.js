@@ -22,7 +22,6 @@ let settings = {
 		"df": "imgs/sad.png",
 		"dn": "imgs/_.png",
 		"do": "imgs/talking.png",
-		"dop": "imgs/_talking.png",
 		"rs": "imgs/stunned.png",
 		"rf": "imgs/stunned.png",
 		"rn": "imgs/stunned.png",
@@ -31,9 +30,8 @@ let settings = {
 		"sf": "imgs/confused.png",
 		"sn": "imgs/mhm.png",
 		"so": "imgs/haha.png",
-		"sop": "imgs/uhh.png",
-		"bsop": "imgs/uhh.png",
 	},
+	"FPS": 10,
 	"bgColor": "transparent",
 	"radius": "5px",
 	"blinkThre": 0.5,
@@ -138,8 +136,6 @@ let lastVideoTime = -1;
 let results = undefined;
 
 let lastFrameTime = 0;
-const targetFPS = 10;
-const frameInterval = 1000 / targetFPS;
 
 function requestFrame() {
 	if (streamOn === true) {
@@ -150,6 +146,7 @@ function requestFrame() {
 	}
 };
 async function predictWebcam(timestamp) {
+	let frameInterval = 1000 / settings.FPS;
 	// Time checker: only proceed if enough time has passed
 	if (timestamp - lastFrameTime < frameInterval) {
 		requestFrame();
@@ -321,3 +318,17 @@ for (let i = 0; i < thres.length; i++) {
 	})
 	deThre.value = settings[thres[i]];
 }
+let targetFPS = document.getElementById("FPS");
+targetFPS.addEventListener("change", function() {
+	let val = parseInt(targetFPS.value);
+	if (isNaN(val)) {
+		targetFPS.value = settings.FPS;
+		return
+	}
+	val = val < 1 ? 1 : val;
+	val = val > 60 ? 60 : val;
+	settings.FPS = val;
+	targetFPS.value = val;
+})
+targetFPS.value = settings.FPS;
+
