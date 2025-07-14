@@ -295,7 +295,7 @@ radius.addEventListener("change", changeRadius);
 
 function changeBgColor() {
 	const isValidHex = /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(bgColor.value.trim());
-	settings.bgColor = isValidHex ? input : "transparent";
+	settings.bgColor = isValidHex ? bgColor.value.trim() : "transparent";
 	avatar.style.backgroundColor = settings.bgColor;
 }
 function changeRadius() {
