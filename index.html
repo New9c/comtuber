@@ -35,20 +35,33 @@ limitations under the License. -->
 		<div id="faceCode"></div><br><br><br>
 		<label class="box">
 			<input type="checkbox" hidden>
-			<div class="box-header">Setting up Comtuber in OBS</div>
+			<div class="box-header">About</div>
 			<div class="box-content">
-				I believe the best way to set this up in OBS is with "Browser" or "Browser Source", and you'll have to
-				put the "--use-fake-ui-for-media-stream" flag to allow permissions.<br><br>
-				For Linux I use "flatpak run com.obsproject.Studio --use-fake-ui-for-media-stream".<br><br>
-				Go to "Sources" and hit '+', use "Browser" and type in "https://comtuber.vercel.app" with the height and
-				width the same as your images. The example images are 128x128px.<br><br>
-				Congrats! You are now a comtuber :D
+				Comtuber: We got Vtubing at home.<br>
+				This is a free open source project that trys to show more expression than other pngtuber software
+				without turning my laptop into a jet engine or making the display a slide show.<br>
+				Here is the<a href="https://github.com/New9c/comtuber" target="_blank" class="github-button">GitHub</a>
 			</div>
 		</label>
 		<label class="box">
 			<input type="checkbox" hidden>
-			<div class="box-header">About</div>
+			<div class="box-header">Setting up Comtuber in OBS</div>
 			<div class="box-content">
+				I believe the best way to set this up in OBS is with "Browser", and you'll have to
+				put the "--auto-accept-camera-and-microphone-capture" flag to allow permissions.<br><br>
+				For Windows check out how to add flags<a href="https://obsproject.com/kb/launch-parameters"
+					class="launch-param">here</a><br>
+				For Mac just buy a model and do Vtubing instead (jk use the same link as windows)<br>
+				For Linux use flatpak: "flatpak run com.obsproject.Studio
+				--auto-accept-camera-and-microphone-capture".<br><br>
+				Go to "Sources" and hit '+', use "Browser" and type in "https://comtuber.vercel.app" with the height
+				and width the same as your images. The example images are 128x128px. BTW, you can't have two instances
+				running, so set it up first in a browser, close it and have it in obs.<br><br>
+				Congrats! You are now a comtuber :D<br><br>
+				If "Browser" doesn't quite work, a not as good strat is to use "Window Capture" or "Screen Capture".
+				Crop the window by holding Alt and move the edges, then using filters key out the background color.
+				<br>
+				If those don't work, consult a chatbot, restart obs, restart the computer and somehow it'll work maybe.
 			</div>
 		</label>
 	</div>
@@ -169,7 +182,7 @@ limitations under the License. -->
 			<input type="checkbox" hidden>
 			<div class="box-header">Importing Json</div>
 			<div class="box-content">
-				You now can import your json file! Note that this button does the same thing as right clicking the
+				You can now import your json file! Note that this button does the same thing as right clicking the
 				face.<br>
 				<label for="jsonInput" id="file-upload" class="files">Add your json :3</label>
 				<input type="file" id="jsonInput" accept=".json" style="display: none;" /><br>

@@ -45,6 +45,8 @@ input {
 }
 
 label.files,
+.github-button,
+.launch-param,
 button {
 	font-family: 'Cascadia Mono';
 	margin: 0.5em;
@@ -60,17 +62,34 @@ button {
 	background: var(--primary);
 }
 
-#exportName {
-	margin: 0.5em 0em 0.5em 0.5em;
-}
 
 label.files {
 	background: var(--accent);
 }
 
+a.github-button {
+	background: black;
+	color: white;
+	text-decoration: none;
+	padding: 0.5em;
+}
+
+a.launch-param {
+	background: darkblue;
+	color: white;
+	text-decoration: none;
+	padding: 0.5em;
+}
+
 label.files:hover,
+.github-button:hover,
+.launch-param:hover,
 button:hover {
 	transform: translateY(-1.5px);
+}
+
+#exportName {
+	margin: 0.5em 0em 0.5em 0.5em;
 }
 
 .avatar:hover {
