@@ -34,10 +34,18 @@ let settings = {
 	"FPS": 10,
 	"bgColor": "transparent",
 	"radius": "5px",
+
+	"randomBlink": false,
 	"blinkThre": 0.5,
+
 	"raiseBrowThre": 0.7,
 	"squintThre": 0.02,
+
+	"volumeTracking": false,
+	"volumeThre": 0.01,
+	"volumeDelay": 0.5,
 	"jawThre": 0.1,
+
 	"smileThre": 0.001,
 	"frownThre": 0.01,
 	"puckThre": 0.4,
@@ -84,6 +92,8 @@ const exportJSON = document.getElementById('export');
 const canvasElement = document.getElementById("output_canvas");
 let modImg = null;
 let modJson = null;
+let vol = 0.005;
+let openMouthTill;
 // Check if webcam access is supported.
 function hasGetUserMedia() { return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia); }
 
@@ -97,6 +107,10 @@ if (!hasGetUserMedia()) document.getElementById("faceCode").innerText = "NO CAME
 document.getElementById("modBtn").addEventListener("click", function() {
 	let modVal = document.getElementById('face-to-mod').value.trim();
 	modFaces(modVal, modImg)
+});
+document.getElementById("toggleVolumeBtn").addEventListener("click", function() {
+	settings.volumeTracking = !settings.volumeTracking
+	document.getElementById("toggleVolumeBtn").textContent = settings.volumeTracking ? "Volume" : "Mouth";
 });
 
 img.addEventListener('change', (event) => { modImg = event.target.files[0]; });
@@ -152,7 +166,7 @@ async function predictWebcam(timestamp) {
 		requestFrame();
 		return;
 	}
-	//console.log("Interval:", frameInterval, "Elapsed since last frame:", timestamp - lastFrameTime);
+	console.log("Interval:", frameInterval, "Elapsed since last frame:", timestamp - lastFrameTime);
 	lastFrameTime = timestamp; // Update last frame time
 
 	let startTimeMs = performance.now();
@@ -182,7 +196,10 @@ function imagePicker(blendShapes) {
 	let isBlinking = landmarks[9].score >= settings.blinkThre && landmarks[10].score >= settings.blinkThre;
 	let raisedBrow = landmarks[3].score >= settings.raiseBrowThre && landmarks[4].score >= settings.raiseBrowThre && landmarks[5].score >= settings.raiseBrowThre;
 	let squinted = landmarks[1].score >= settings.squintThre && landmarks[2].score >= settings.squintThre;
-	let openedJaw = landmarks[25].score >= settings.jawThre;
+	if (vol >= settings.volumeThre) {
+		openMouthTill = lastFrameTime + settings.volumeDelay * 1000;
+	}
+	let openedJaw = settings.volumeTracking ? openMouthTill >= lastFrameTime : landmarks[25].score >= settings.jawThre;
 	let smiling = landmarks[30].score < settings.smileThre && landmarks[31].score < settings.smileThre;
 	let frowning = landmarks[30].score >= settings.frownThre && landmarks[31].score >= settings.frownThre;
 	let isPucker = landmarks[38].score >= settings.puckThre;
@@ -302,7 +319,7 @@ function changeRadius() {
 changeBgColor();
 changeRadius();
 
-const thres = ["blinkThre", "raiseBrowThre", "squintThre", "jawThre", "smileThre", "frownThre", "puckThre"];
+const thres = ["blinkThre", "raiseBrowThre", "squintThre", "jawThre", "volumeDelay", "volumeThre", "smileThre", "frownThre", "puckThre"];
 for (let i = 0; i < thres.length; i++) {
 	let deThre = document.getElementById(thres[i]);
 	deThre.addEventListener("change", function() {
@@ -332,3 +349,39 @@ targetFPS.addEventListener("change", function() {
 })
 targetFPS.value = settings.FPS;
 
+
+// Request microphone permission and get stream
+navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+	const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+	const source = audioContext.createMediaStreamSource(stream);
+
+	// Create an analyser node
+	const analyser = audioContext.createAnalyser();
+	analyser.fftSize = 2048;
+	source.connect(analyser);
+
+	// Audio data array
+	const dataArray = new Uint8Array(analyser.fftSize);
+
+	function getVolume() {
+		analyser.getByteTimeDomainData(dataArray);
+
+		// Calculate RMS (root mean square) for loudness
+		let sumSquares = 0;
+		for (const value of dataArray) {
+			const normalized = (value - 128) / 128;
+			sumSquares += normalized * normalized;
+		}
+		vol = Math.sqrt(sumSquares / dataArray.length);
+
+		// Log or display volume (rms will be between 0 - 1)
+		console.log('Volume (RMS):', vol);
+
+		// For animation or continuous monitoring
+		requestAnimationFrame(getVolume);
+	}
+
+	getVolume();
+}).catch(err => {
+	console.error('Microphone access denied:', err);
+});

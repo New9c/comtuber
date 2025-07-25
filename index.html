@@ -40,9 +40,9 @@ limitations under the License. -->
 				Comtuber: We got Vtubing at home.<br><br>
 				This is a free open source project that trys to show more expression than other pngtuber software
 				without turning my laptop into a jet engine or making the display a slide show.<br><br>
-				As cool as it is, it simply is a highly modified version of<a
+				As cool as it is, it simply is a highly modified version of this <a
 					href="https://codepen.io/mediapipe-preview/pen/OJBVQJm" target="_blank"
-					class="btn github-button">this demo</a><br>
+					class="btn github-button">MediaPipe demo</a><br>
 				Here is the<a href="https://github.com/New9c/comtuber" target="_blank"
 					class="btn github-button">GitHub</a>for Comtuber :3
 			</div>
@@ -117,6 +117,7 @@ limitations under the License. -->
 				The default 12 faces are made via your eyebrows and mouth, the img will be set automatically :3<br>
 				First letter is (d)efault, (r)aised, (s)quint.<br>
 				Second is (s)mile, (n)etural, (f)rown, (o)pen.<br>
+				You can repeat imgs too!<br>
 				Be Right Back -> <label for="BRB" id="l-BRB" class="files btn">Choose an image :3</label>
 				<input type="file" id="BRB" accept="image/*" style="display: none;" /><br>
 				ds -> <label for="ds" id="l-ds" class="files btn">Choose an image :3</label>
@@ -169,15 +170,22 @@ limitations under the License. -->
 				<input type="text" id="FPS" value="10" /> <br><br>
 				You can set the threshold for values here, I know they are kinda all over the place, but these values
 				seem to work best for me.<br>
-				Tweak them until they can pretty accurately tell when you are/aren't showing a expression.
+				Tweak them until they can pretty accurately tell when you are/aren't showing a expression.<br>
 				Blinking:
 				<input type="text" id="blinkThre" value="0.5" /> <br>
 				Raised Eyebrows:
 				<input type="text" id="raiseBrowThre" value="0.7" /> <br>
 				Squinting:
 				<input type="text" id="squintThre" value="0.02" /> <br>
+
+				Mouth Tracking (Click to toggle):
+				<button id="toggleVolumeBtn" class="btn">Mouth</button><br>
+				Volume:
+				<input type="text" id="volumeThre" value="0.007" /> <br>
+				Volume Delay:
+				<input type="text" id="volumeDelay" value="0.5" />secs <br>
 				Opened Mouth:
-				<input type="text" id="jawThre" value="0.1" /> <br>
+				<input type="text" id="jawThre" value="0.1" /> <br><br>
 				Smiling:
 				<input type="text" id="smileThre" value="0.001" /> <br>
 				Frowning:
@@ -202,7 +210,8 @@ limitations under the License. -->
 			<input type="checkbox" hidden>
 			<div class="box-header">Exporting Json</div>
 			<div class="box-content">
-				Once you feel like everything is working well, you can export your settings out as a json file!<br>
+				Once you feel like everything is working well, you can export your settings out as a json file!
+				You can give it a stare if you are curious about how it works.<br>
 				<input type="text" id="exportName" value="Comtuber" placeholder="Comtuber" />
 				.json
 				<label id="export" class="files btn">

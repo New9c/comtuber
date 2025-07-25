@@ -23,7 +23,6 @@ const roots = ["text", "background", "primary", "accent"];
 for (let i = 0; i < roots.length; i++) {
 	let root = document.getElementById(roots[i]);
 	root.addEventListener("change", function() {
-		console.log("hi");
 		const val = root.value;
 		document.documentElement.style.setProperty('--' + roots[i], val);
 	});
