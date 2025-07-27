@@ -29,91 +29,111 @@ limitations under the License. -->
 </head>
 
 <body>
-	<div>
-		<img class="avatar" id="avatar" src="imgs/BRB.png" loading="lazy" alt="IMG NOT FOUND D:"><br>
-		<button id="toggleFaceCode" class="btn">Hide Face Code</button><br>
-		<div id="faceCode"></div><br><br><br>
-		<label class="box accent">
-			<input type="checkbox" hidden>
-			<div class="box-header accent">About</div>
-			<div class="box-content">
-				Comtuber: We got Vtubing at home.<br><br>
-				This is a free open source project that trys to show more expression than other pngtuber software
-				without turning my laptop into a jet engine or making the display a slide show.<br><br>
-				As cool as it is, it simply is a highly modified version of this <a
-					href="https://codepen.io/mediapipe-preview/pen/OJBVQJm" target="_blank"
-					class="btn github-button">MediaPipe demo</a><br>
-				Here is the<a href="https://github.com/New9c/comtuber" target="_blank"
-					class="btn github-button">GitHub</a>for Comtuber :3
+	<div id="left">
+		<div>
+			<img class="avatar" id="avatar" src="imgs/BRB.png" loading="lazy" alt="IMG NOT FOUND D:"><br>
+			<section id="demos" class="removed">
+				<div id="liveView" class="videoView">
+					<div style="position: relative;" class="webcam">
+						<video id="webcam" style="position: abso" autoplay playsinline></video>
+						<canvas class="output_canvas" id="output_canvas"
+							style="position: absolute; left: 0px; top: 0px;"></canvas>
+					</div>
+				</div>
+			</section>
+			<button id="toggleStats" class="btn">Show Tracking Stats</button><br>
+			<button id="toggleFaceCode" class="btn">Show Face Code</button><br>
+			<div id="faceCode" class="removed"></div><br><br><br>
+			<div>
+				<label class="box accent">
+					<input type="checkbox" hidden>
+					<div class="box-header accent">About</div>
+					<div class="box-content">
+						Comtuber: We got Vtubing at home.<br><br>
+						"Com" is short for comic, as it changes expressions more often than commonly used
+						pngtuber software such as <a href="https://olmewe.itch.io/veadotube-mini" target="_blank"
+							class="btn veo">veodotube mini</a>, but falls short of animation/Vtubing, giving
+						a comic-ish vibe.<br><br>
+						This is a free open source project I made to try and <br>
+						✅ show as much expression<br>
+						✅ remove manual expression switching with hotkeys<br>
+						❌ turn my laptop into a jet engine<br><br>
+						As cool as it is, it simply is a highly modified version of this <a
+							href="https://codepen.io/mediapipe-preview/pen/OJBVQJm" target="_blank"
+							class="btn github-button">MediaPipe demo</a><br>
+						Here is the<a href="https://github.com/New9c/comtuber" target="_blank"
+							class="btn github-button">GitHub</a>for Comtuber :3
+					</div>
+				</label>
+				<label class="box accent">
+					<input type="checkbox" hidden>
+					<div class="box-header accent">Setting up Comtuber in OBS</div>
+					<div class="box-content">
+						I believe the best way to set this up in OBS is with "Browser", and you'll have to
+						put the "--auto-accept-camera-and-microphone-capture" flag to allow permissions.<br><br>
+						For Windows check out how to add flags<a href="https://obsproject.com/kb/launch-parameters"
+							class="btn launch-param">here</a><br>
+						For Mac just buy a model and do Vtubing instead (jk use the same link as windows)<br>
+						For Linux use flatpak: "flatpak run com.obsproject.Studio
+						--auto-accept-camera-and-microphone-capture".<br><br>
+						Go to "Sources" and hit '+', use "Browser" and type in "https://comtuber.vercel.app" with the
+						height
+						and width the same as your images. The example images are 128x128px. BTW, you can't have two
+						instances
+						running, so set it up first in a browser, close it and have it in obs.<br><br>
+						Congrats! You are now a comtuber :D<br><br>
+						If "Browser" doesn't quite work, a not as good strat is to use "Window Capture" or "Screen
+						Capture".
+						Crop the window by holding Alt and move the edges, then using filters key out the background
+						color.
+						<br><br>
+						If those don't work, consult a chatbot, restart obs, restart the computer and somehow it'll work
+						maybe.
+					</div>
+				</label>
+				<label class="box accent">
+					<input type="checkbox" hidden>
+					<div class="box-header accent">Website Settings</div>
+					<div class="box-content">
+						<button id="resetRoot" class="btn">Reset</button><br>
+						--text:
+						<input type="text" id="text" value="#d8fde1" /> <br>
+						--background:
+						<input type="text" id="background" value="#1c1b1b" /> <br>
+						--primary:
+						<input type="text" id="primary" value="#0edd37" /> <br>
+						--accent:
+						<input type="text" id="accent" value="#2bffed" /> <br>
+						This isn't saved in the json file.
+					</div>
+				</label>
+				<label class="box red">
+					<input type="checkbox" hidden>
+					<div class="box-header red">Iwannaseemyface</div>
+					<div class="box-content">
+						Type "Iwannaseemyface" below to see your face, THIS WILL SHOW YOUR FACE (duh).<br><br>
+						This isn't saved in the json file, cause your face should be private!<br><br>
+						"Show Tracking Stats" gives basically all the info you need for Tweaks, so if you don't want ppl
+						to know your face, maybe you shouldn't touch this at all.<br>
+						<input type="text" id="nerds" placeholder="Iwannaseemyface" /> <br>
+						Applys on Enter.<br>
+					</div>
+				</label>
 			</div>
-		</label>
-		<label class="box accent">
-			<input type="checkbox" hidden>
-			<div class="box-header accent">Setting up Comtuber in OBS</div>
-			<div class="box-content">
-				I believe the best way to set this up in OBS is with "Browser", and you'll have to
-				put the "--auto-accept-camera-and-microphone-capture" flag to allow permissions.<br><br>
-				For Windows check out how to add flags<a href="https://obsproject.com/kb/launch-parameters"
-					class="btn launch-param">here</a><br>
-				For Mac just buy a model and do Vtubing instead (jk use the same link as windows)<br>
-				For Linux use flatpak: "flatpak run com.obsproject.Studio
-				--auto-accept-camera-and-microphone-capture".<br><br>
-				Go to "Sources" and hit '+', use "Browser" and type in "https://comtuber.vercel.app" with the height
-				and width the same as your images. The example images are 128x128px. BTW, you can't have two instances
-				running, so set it up first in a browser, close it and have it in obs.<br><br>
-				Congrats! You are now a comtuber :D<br><br>
-				If "Browser" doesn't quite work, a not as good strat is to use "Window Capture" or "Screen Capture".
-				Crop the window by holding Alt and move the edges, then using filters key out the background color.
-				<br><br>
-				If those don't work, consult a chatbot, restart obs, restart the computer and somehow it'll work maybe.
-			</div>
-		</label>
-		<label class="box accent">
-			<input type="checkbox" hidden>
-			<div class="box-header accent">Website Settings</div>
-			<div class="box-content">
-				<button id="resetRoot" class="btn">Reset</button><br>
-				--text:
-				<input type="text" id="text" value="#d8fde1" /> <br>
-				--background:
-				<input type="text" id="background" value="#1c1b1b" /> <br>
-				--primary:
-				<input type="text" id="primary" value="#0edd37" /> <br>
-				--accent:
-				<input type="text" id="accent" value="#2bffed" /> <br>
-				This isn't saved in the json file.
-			</div>
-		</label>
-		<label class="box red">
-			<input type="checkbox" hidden>
-			<div class="box-header red">NERDS</div>
-			<div class="box-content">
-				Type "Iwannaseemyfaceandepicstats" below to see some nerd stuff, THIS WILL SHOW YOUR FACE. Applys on
-				Enter.<br>
-				<input type="text" id="nerds" placeholder="Iwannaseemyfaceandepicstats" /> <br>
-			</div>
-		</label>
+		</div>
+		<div class="blend-shapes removed">
+			<ul class="blend-shapes-list" id="video-blend-shapes"></ul>
+		</div><br>
 	</div>
 
-	<section id="demos" class="removed">
-		<div id="liveView" class="videoView">
-			<div style="position: relative;" class="webcam">
-				<video id="webcam" style="position: abso" autoplay playsinline></video>
-				<canvas class="output_canvas" id="output_canvas"
-					style="position: absolute; left: 0px; top: 0px;"></canvas>
-			</div>
-		</div>
-		<div class="blend-shapes">
-			<ul class="blend-shapes-list" id="video-blend-shapes"></ul>
-		</div>
-
-	</section>
 	<div class="main">
 		<h5>Click on the face to toggle BRB, Right click the face to import your json file!</h5>
 		<label class="box">
 			<input type="checkbox" hidden>
-			<div class="box-header">Setup Your Faces</div>
+			<div class="box-header">Basic Setup</div>
 			<div class="box-content">
+				Sorry for the long list, it's there so you keep track of your progress!<br>
+				Please scroll down with a scroll down... thingy (surely ya have one)<br><br>
 				The default 12 faces are made via your eyebrows and mouth, the img will be set automatically :3<br>
 				First letter is (d)efault, (r)aised, (s)quint.<br>
 				Second is (s)mile, (n)etural, (f)rown, (o)pen.<br>
@@ -148,15 +168,16 @@ limitations under the License. -->
 		</label>
 		<label class="box">
 			<input type="checkbox" hidden>
-			<div class="box-header">Modifying Faces</div>
+			<div class="box-header">Add More Faces/Modify Existing Ones</div>
 			<div class="box-content">
+				"Show Face Code" may be helpful here.<br><br>
 				Now that you have the basic 12 faces, you can add some more faces with b(blink) and
-				p(pucker).<br>
+				p(pucker). Pucker is better explained in Tweaks/Pucker.<br>
 				You can also modify existing faces :D<br><br>
 				Note that if the face code "bxxp" isn't set, it will try "bxx" then "xx", which means you may
-				need to set both "xxp" and "bxxp" for pucker.<br>
+				need to set both "xxp" and "bxxp" for pucker. Ex: "bdsp" -> "bds" -> "ds"<br>
 				Face code to modify:<input type="text" id="face-to-mod" placeholder="bdop" /> <br>
-				<label for="imgInput" class="files btn">Choose an image :3</label>
+				<label for="imgInput" id="img-upload" class="files btn">Choose an image :3</label>
 				<input type="file" id="imgInput" accept="image/*" style="display: none;" /><button id="modBtn"
 					class="btn">Modify</button><br>
 			</div>
@@ -165,34 +186,86 @@ limitations under the License. -->
 			<input type="checkbox" hidden>
 			<div class="box-header">Tweaks</div>
 			<div class="box-content">
-				Higher FPS may not be better as it may feel a bit jumpy.<br>
-				FPS:
-				<input type="text" id="FPS" value="10" /> <br><br>
-				You can set the threshold for values here, I know they are kinda all over the place, but these values
-				seem to work best for me.<br>
-				Tweak them until they can pretty accurately tell when you are/aren't showing a expression.<br>
-				Blinking:
-				<input type="text" id="blinkThre" value="0.5" /> <br>
-				Raised Eyebrows:
-				<input type="text" id="raiseBrowThre" value="0.7" /> <br>
-				Squinting:
-				<input type="text" id="squintThre" value="0.02" /> <br>
+				"Show Tracking Stats" may be helpful here.<br><br>
+				You can tweak some settings here! Check them all out :3<br>
+				<label for="tweaks">Choose a thingy:</label>
+				<select id="tweaks" name="tweaks">
+					<option value="fps">FPS</option>
+					<option value="blink">Blinking</option>
+					<option value="mouth">Mouth</option>
+					<option value="raisedBrows">Raised Eyebrows</option>
+					<option value="squint">Squinting</option>
+					<option value="smile">Smile</option>
+					<option value="frown">Frown</option>
+					<option value="pucker">Pucker</option>
+				</select><br><br>
 
-				Mouth Tracking (Click to toggle):
-				<button id="toggleVolumeBtn" class="btn">Mouth</button><br>
-				Volume:
-				<input type="text" id="volumeThre" value="0.007" /> <br>
-				Volume Delay:
-				<input type="text" id="volumeDelay" value="0.5" />secs <br>
-				Opened Mouth:
-				<input type="text" id="jawThre" value="0.1" /> <br><br>
-				Smiling:
-				<input type="text" id="smileThre" value="0.001" /> <br>
-				Frowning:
-				<input type="text" id="frownThre" value="0.01" /> <br>
-				Pucker:
-				<input type="text" id="puckThre" value="0.4" /> <br>
-				(Applys after you hit Enter or click away)
+				<div id="fps-box" class="">
+					You can set the FPS up to 60.<br>
+					This changes how often the img is updated.<br><br>
+					Remember that this is COMtuber, so it's made for a comic book like feel. If you raise the fps, it
+					makes it switch faces faster, not smoother.<br>
+					GIFs also won't work that well.<br>
+					FPS:
+					<input type="text" id="FPS" value="10" /> <br>
+				</div>
+				<div id="blink-box" class="removed">
+					Blink Tracking (Click to toggle):
+					<button id="toggleBlinkBtn" class="btn">True</button><br>
+					<div id="trueBlinkSettings">
+						Blinking Threshold (higher = harder to blink):
+						<input type="text" id="blinkThre" value="0.5" /> <br>
+					</div>
+					<div id="randomBlinkSettings" class="removed">
+						Have the eyes open from (min)<input type="text" id="minEyeOpen" value="5" />
+						to (max)<input type="text" id="maxEyeOpen" value="5" />secs, then close eyes (blink) for
+						<input type="text" id="eyeClosed" value="0.1" />secs (you can set this to 0 and win every
+						staring
+						contest!)<br>
+					</div>
+				</div>
+				<div id="mouth-box" class="removed">
+					Mouth Tracking (Click to toggle):
+					<button id="toggleVolumeBtn" class="btn">Mouth</button><br>
+					<div id="volumeSettings" class="removed">
+						Current Volume: <label id="rms"></label><br>
+						Volume Threshold:
+						<input type="text" id="volumeThre" value="0.007" /> <br>
+						Volume Delay (Mouth stays open for):
+						<input type="text" id="volumeDelay" value="0.15" />secs <br>
+					</div>
+					<div id="mouthSettings">
+						Mouth Opened Threshold (higher = harder to open mouth):
+						<input type="text" id="jawThre" value="0.1" /> <br>
+					</div>
+				</div>
+				<div id="raisedBrows-box" class="removed">
+					Eyebrows Raised Threshold (higher = harder to raise brows):
+					<input type="text" id="raiseBrowThre" value="0.7" /> <br>
+				</div>
+				<div id="squint-box" class="removed">
+					Squinting Threshold (higher = harder to squint):
+					<input type="text" id="squintThre" value="0.02" /> <br>
+				</div>
+				<div id="smile-box" class="removed">
+					Smiling Threshold (higher = harder to smile :c):
+					<input type="text" id="smileThre" value="0.001" /> <br>
+				</div>
+				<div id="frown-box" class="removed">
+					Frowning Threshold (higher = harder to frown):
+					<input type="text" id="frownThre" value="0.01" /> <br>
+				</div>
+				<div id="pucker-box" class="removed">
+					Pucker is a weird setting.<br>
+					My best definition for pucker is the NOOT NOOT face Pingu makes, uh ya.<br><br>
+					It exists because mood detection for an open-mouth state is hard, and my 😆 face ended up getting
+					the same face code as my 🤬 face: "so".<br>
+					To solve this, I got pucker, and roughly "so"=😆 and "sop"=🤬. It's not as good as I want it,
+					but it's good enough.<br><br>
+					Pucker Threshold (higher = harder to pucker):
+					<input type="text" id="puckThre" value="0.4" /> <br>
+				</div>
+				<br>(Applys after you hit Enter or click away)
 			</div>
 		</label>
 		<label class="box">
