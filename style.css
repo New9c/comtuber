@@ -59,15 +59,23 @@ input {
 }
 
 a.github-button {
+	border: 1px solid white;
 	background: black;
+	color: white;
+	text-decoration: none;
+	padding: 0.4em;
+}
+
+a.launch-param {
+	background: #1c2b71;
 	color: white;
 	text-decoration: none;
 	padding: 0.5em;
 }
 
-a.launch-param {
-	background: darkblue;
-	color: white;
+a.veo {
+	background: #91dbbc;
+	color: #6a1616;
 	text-decoration: none;
 	padding: 0.5em;
 }
@@ -166,13 +174,20 @@ footer {
 
 
 .videoView,
-.detectOnClick,
-.blend-shapes {
-	position: relative;
-	float: left;
+.detectOnClick {
 	width: 48%;
 	margin: 2% 1%;
 	cursor: pointer;
+}
+
+.blend-shapes {
+	position: relative;
+	margin: 2% 1%;
+}
+
+#left {
+	display: grid;
+	grid-template-columns: 1fr;
 }
 
 .videoView p,
@@ -276,8 +291,4 @@ footer {
 	max-height: 200px;
 	/* or use max-height: 100vh for dynamic height */
 	padding: 10px;
-}
-
-#nerds {
-	width: 220px;
 }
