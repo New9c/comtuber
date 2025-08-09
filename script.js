@@ -95,8 +95,6 @@ const fileUpload = document.getElementById('file-upload');
 const exportJSON = document.getElementById('export');
 const canvasElement = document.getElementById("output_canvas");
 let volumeTrackingBeenOnBefore = false;
-let modImg = null;
-let modJson = null;
 let vol = 0.005;
 let openMouthTill;
 let openEyes = true;
@@ -118,10 +116,6 @@ function chooseBoxes() {
 	document.getElementById("volumeSettings").className = settings.volumeTracking ? "" : "removed";
 	document.getElementById("mouthSettings").className = settings.volumeTracking ? "removed" : "";
 }
-document.getElementById("modBtn").addEventListener("click", function() {
-	let modVal = document.getElementById('face-to-mod').value.trim();
-	modFaces(modVal, modImg)
-});
 document.getElementById("toggleBlinkBtn").addEventListener("click", function() {
 	settings.randomBlink = !settings.randomBlink;
 	chooseBoxes();
@@ -138,7 +132,9 @@ img.addEventListener('change', (event) => {
 	} else {
 		imgUpload.textContent = 'Choose an image :3';
 	}
-	modImg = event.target.files[0];
+	let modVal = document.getElementById('face-to-mod').value.trim();
+	let modImg = event.target.files[0];
+	modFaces(modVal, modImg)
 });
 json.addEventListener('change', (event) => {
 	if (json.files.length > 0) {
@@ -146,13 +142,10 @@ json.addEventListener('change', (event) => {
 	} else {
 		fileUpload.textContent = 'Add your file :3';
 	}
-	modJson = event.target.files[0];
-	importJSON()
+	importJSON(event.target.files[0])
 });
 
-avatar.addEventListener("click", function() {
-	toggleCam();
-});
+avatar.addEventListener("click", toggleCam);
 avatar.addEventListener("contextmenu", function() {
 	event.preventDefault();
 	json.click();
@@ -178,7 +171,7 @@ let results = undefined;
 let lastFrameTime = 0;
 
 function requestFrame() {
-	if (streamOn === true) {
+	if (streamOn) {
 		window.requestAnimationFrame(predictWebcam);
 	} else {
 		avatar.src = settings.faces.BRB;
@@ -204,15 +197,15 @@ async function predictWebcam(timestamp) {
 	drawBlendShapes(videoBlendShapes, results.faceBlendshapes);
 	requestFrame();
 }
-function setupCanvas() {
-	const radio = video.videoHeight / video.videoWidth;
-	video.style.width = videoWidth + "px";
-	video.style.height = videoWidth * radio + "px";
-	canvasElement.style.width = videoWidth + "px";
-	canvasElement.style.height = videoWidth * radio + "px";
-	canvasElement.width = video.videoWidth;
-	canvasElement.height = video.videoHeight;
-}
+// setupCanvas
+const radio = video.videoHeight / video.videoWidth;
+video.style.width = videoWidth + "px";
+video.style.height = videoWidth * radio + "px";
+canvasElement.style.width = videoWidth + "px";
+canvasElement.style.height = videoWidth * radio + "px";
+canvasElement.width = video.videoWidth;
+canvasElement.height = video.videoHeight;
+//
 function imagePicker(blendShapes) {
 	if (!blendShapes.length) {
 		return;
@@ -225,17 +218,31 @@ function imagePicker(blendShapes) {
 		_eyeTill += lastFrameTime;
 	}
 	let isBlinking = settings.randomBlink ? !openEyes : landmarks[9].score >= settings.blinkThre && landmarks[10].score >= settings.blinkThre;
+	document.getElementById("eyeBlinkLeft").textContent = floatRounder(landmarks[9].score);
+	document.getElementById("eyeBlinkRight").textContent = floatRounder(landmarks[10].score);
+	let openedJaw = settings.volumeTracking ? openMouthTill >= lastFrameTime : landmarks[25].score >= settings.jawThre;
+	document.getElementById("jawOpen").textContent = landmarks[25].score.toFixed(4);
 	let raisedBrow = landmarks[3].score >= settings.raiseBrowThre && landmarks[4].score >= settings.raiseBrowThre && landmarks[5].score >= settings.raiseBrowThre;
+	document.getElementById("browInnerUp").textContent = landmarks[3].score.toFixed(4);
+	document.getElementById("browOuterUpLeft").textContent = landmarks[4].score.toFixed(4);
+	document.getElementById("browOuterUpRight").textContent = landmarks[5].score.toFixed(4);
 	let squinted = landmarks[1].score >= settings.squintThre && landmarks[2].score >= settings.squintThre;
+	document.getElementById("browDownLeft").textContent = landmarks[1].score.toFixed(4);
+	document.getElementById("browDownRight").textContent = landmarks[2].score.toFixed(4);
 	if (vol >= settings.volumeThre) {
 		openMouthTill = lastFrameTime + settings.volumeDelay * 1000;
 	}
-	let openedJaw = settings.volumeTracking ? openMouthTill >= lastFrameTime : landmarks[25].score >= settings.jawThre;
 	let smiling = landmarks[30].score < settings.smileThre && landmarks[31].score < settings.smileThre;
+	document.getElementById("mouthFrownLeft1").textContent = landmarks[30].score.toFixed(4);
+	document.getElementById("mouthFrownRight1").textContent = landmarks[31].score.toFixed(4);
 	let frowning = landmarks[30].score >= settings.frownThre && landmarks[31].score >= settings.frownThre;
+	document.getElementById("mouthFrownLeft2").textContent = landmarks[30].score.toFixed(4);
+	document.getElementById("mouthFrownRight2").textContent = landmarks[31].score.toFixed(4);
 	let isPucker = landmarks[38].score >= settings.puckThre;
+	document.getElementById("mouthPucker").textContent = landmarks[38].score.toFixed(4);
 
 	let faceCode = "";
+	// create face code
 	if (squinted) {
 		faceCode += "s";
 	} else if (raisedBrow) {
@@ -259,6 +266,7 @@ function imagePicker(blendShapes) {
 		faceCode += "p";
 	}
 	document.getElementById('faceCode').innerText = faceCode
+	document.getElementById('faceCode2').innerText = faceCode
 	if (settings.faces[faceCode] === undefined && faceCode[faceCode.length - 1] === 'p') {
 		faceCode = faceCode.slice(0, -1);
 	}
@@ -269,11 +277,9 @@ function imagePicker(blendShapes) {
 	document.getElementById('avatar').src = settings.faces[faceCode];
 }
 function drawBlendShapes(el, blendShapes) {
-	setupCanvas();
 	if (!blendShapes.length) {
 		return;
 	}
-	//console.log(blendShapes[0]);
 	let htmlMaker = "";
 	blendShapes[0].categories.map((shape) => {
 		htmlMaker += `
@@ -302,8 +308,8 @@ function modFaces(modVal, theImg) {
 	};
 	reader.readAsDataURL(theImg);
 }
-function importJSON() {
-	if (!modJson) {
+function importJSON(importedJson) {
+	if (!importedJson) {
 		alert('Pls choose a JSON file.');
 		return;
 	}
@@ -319,8 +325,9 @@ function importJSON() {
 			alert('Invalid JSON file.');
 		}
 	};
-	reader.readAsText(modJson);
+	reader.readAsText(importedJson);
 }
+
 function downloadJSON() {
 	const jsonStr = JSON.stringify(settings, null, 2);
 	const blob = new Blob([jsonStr], { type: 'application/json' });
@@ -334,10 +341,18 @@ function downloadJSON() {
 	URL.revokeObjectURL(url);
 }
 
-const bgColor = document.getElementById("bgcolor")
-const radius = document.getElementById("radius")
+const bgColor = document.getElementById("bgcolor");
+const radius = document.getElementById("radius");
+const exportName = document.getElementById("exportName");
+exportName.value = "Comtuber";
+const exportBtn = document.getElementById("export");
+
 bgColor.addEventListener("change", changeBgColor);
 radius.addEventListener("change", changeRadius);
+exportName.addEventListener("input", function() {
+	let DaName = exportName.value.trim() + ".json";
+	exportBtn.textContent = DaName == ".json" ? "Download Comtuber.json :3" : `Download ${DaName} :3`;
+})
 
 function changeBgColor() {
 	const isValidHex = /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/.test(bgColor.value.trim());
@@ -381,6 +396,9 @@ trackValue("volumeDelay", 0, 5);
 trackValue("minEyeOpen", 0, 30);
 trackValue("maxEyeOpen", 0, 30);
 
+function floatRounder(f) {
+	return f.toFixed(4);
+}
 function startVolumeTracking() {
 	volumeTrackingBeenOnBefore = true;
 	navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
@@ -403,8 +421,7 @@ function startVolumeTracking() {
 				const normalized = (value - 128) / 128;
 				sumSquares += normalized * normalized;
 			}
-			vol = Math.sqrt(sumSquares / dataArray.length);
-			vol = Math.round(vol * 10000) / 10000;
+			vol = floatRounder(Math.sqrt(sumSquares / dataArray.length));
 
 			document.getElementById("rms").textContent = vol;
 
