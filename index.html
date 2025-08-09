@@ -170,24 +170,22 @@ limitations under the License. -->
 			<input type="checkbox" hidden>
 			<div class="box-header">Add More Faces/Modify Existing Ones</div>
 			<div class="box-content">
-				"Show Face Code" may be helpful here.<br><br>
 				Now that you have the basic 12 faces, you can add some more faces with b(blink) and
 				p(pucker). Pucker is better explained in Tweaks/Pucker.<br>
 				You can also modify existing faces :D<br><br>
 				Note that if the face code "bxxp" isn't set, it will try "bxx" then "xx", which means you may
-				need to set both "xxp" and "bxxp" for pucker. Ex: "bdsp" -> "bds" -> "ds"<br>
-				Face code to modify:<input type="text" id="face-to-mod" placeholder="bdop" /> <br>
+				need to set both "xxp" and "bxxp" for pucker. Ex: "bdsp" -> "bds" -> "ds"<br><br><br>
+				Current face code: <label id="faceCode2"></label><br>
+				Face code to modify:<input type="text" id="face-to-mod" placeholder="bdop" /> ->
 				<label for="imgInput" id="img-upload" class="files btn">Choose an image :3</label>
-				<input type="file" id="imgInput" accept="image/*" style="display: none;" /><button id="modBtn"
-					class="btn">Modify</button><br>
+				<input type="file" id="imgInput" accept="image/*" style="display: none;" /><br>
 			</div>
 		</label>
 		<label class="box">
 			<input type="checkbox" hidden>
 			<div class="box-header">Tweaks</div>
 			<div class="box-content">
-				"Show Tracking Stats" may be helpful here.<br><br>
-				You can tweak some settings here! Check them all out :3<br>
+				You can tweak settings here! Check them all out :3<br>
 				<label for="tweaks">Choose a thingy:</label>
 				<select id="tweaks" name="tweaks">
 					<option value="fps">FPS</option>
@@ -213,8 +211,9 @@ limitations under the License. -->
 					Blink Tracking (Click to toggle):
 					<button id="toggleBlinkBtn" class="btn">True</button><br>
 					<div id="trueBlinkSettings">
-						Blinking Threshold (higher = harder to blink):
-						<input type="text" id="blinkThre" value="0.5" /> <br>
+						Blinks when eyeBlinkLeft(<label id="eyeBlinkLeft"></label>) and eyeBlinkRight(<label
+							id="eyeBlinkRight"></label>) are both
+						bigger than <input type="text" id="blinkThre" value="0.5" /> <br>
 					</div>
 					<div id="randomBlinkSettings" class="removed">
 						Have the eyes open from (min)<input type="text" id="minEyeOpen" value="5" />
@@ -235,24 +234,29 @@ limitations under the License. -->
 						<input type="text" id="volumeDelay" value="0.15" />secs <br>
 					</div>
 					<div id="mouthSettings">
-						Mouth Opened Threshold (higher = harder to open mouth):
+						Mouth opens when jawOpen(<label id="jawOpen"></label>) is bigger than
 						<input type="text" id="jawThre" value="0.1" /> <br>
 					</div>
 				</div>
 				<div id="raisedBrows-box" class="removed">
-					Eyebrows Raised Threshold (higher = harder to raise brows):
+					Eyebrows are raised when browInnerUp(<label id="browInnerUp"></label>) &
+					browOuterUpLeft(<label id="browOuterUpLeft"></label>) &
+					browOuterUpRight(<label id="browOuterUpRight"></label>) are all bigger than
 					<input type="text" id="raiseBrowThre" value="0.7" /> <br>
 				</div>
 				<div id="squint-box" class="removed">
-					Squinting Threshold (higher = harder to squint):
+					Squints when browDownLeft(<label id="browDownLeft"></label>) &
+					browDownRight(<label id="browDownRight"></label>) are both bigger than
 					<input type="text" id="squintThre" value="0.02" /> <br>
 				</div>
 				<div id="smile-box" class="removed">
-					Smiling Threshold (higher = harder to smile :c):
+					Smiles when mouthFrownLeft(<label id="mouthFrownLeft1"></label>) &
+					mouthFrownRight(<label id="mouthFrownRight1"></label>) are both smaller than
 					<input type="text" id="smileThre" value="0.001" /> <br>
 				</div>
 				<div id="frown-box" class="removed">
-					Frowning Threshold (higher = harder to frown):
+					Frowns when mouthFrownLeft(<label id="mouthFrownLeft2"></label>) &
+					mouthFrownRight(<label id="mouthFrownRight2"></label>) are both bigger than
 					<input type="text" id="frownThre" value="0.01" /> <br>
 				</div>
 				<div id="pucker-box" class="removed">
@@ -262,7 +266,7 @@ limitations under the License. -->
 					the same face code as my 🤬 face: "so".<br>
 					To solve this, I got pucker, and roughly "so"=😆 and "sop"=🤬. It's not as good as I want it,
 					but it's good enough.<br><br>
-					Pucker Threshold (higher = harder to pucker):
+					Mouth puckers when mouthPucker(<label id="mouthPucker"></label>) is bigger than
 					<input type="text" id="puckThre" value="0.4" /> <br>
 				</div>
 				<br>(Applys after you hit Enter or click away)
@@ -288,7 +292,7 @@ limitations under the License. -->
 				<input type="text" id="exportName" value="Comtuber" placeholder="Comtuber" />
 				.json
 				<label id="export" class="files btn">
-					Download your json :3
+					Download Comtuber.json :3
 				</label>
 			</div>
 		</label>
