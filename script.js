@@ -94,6 +94,7 @@ const imgUpload = document.getElementById('img-upload');
 const fileUpload = document.getElementById('file-upload');
 const exportJSON = document.getElementById('export');
 const canvasElement = document.getElementById("output_canvas");
+let volumeTrackingBeenOnBefore = false;
 let modImg = null;
 let modJson = null;
 let vol = 0.005;
@@ -109,22 +110,26 @@ function toggleCam() {
 	if (streamOn) startCam();
 }
 if (!hasGetUserMedia()) document.getElementById("faceCode").innerText = "NO CAMERA FOUND D:";
-
+function chooseBoxes() {
+	document.getElementById("toggleBlinkBtn").textContent = settings.randomBlink ? "Random" : "True";
+	document.getElementById("trueBlinkSettings").className = settings.randomBlink ? "removed" : "";
+	document.getElementById("randomBlinkSettings").className = settings.randomBlink ? "" : "removed";
+	document.getElementById("toggleVolumeBtn").textContent = settings.volumeTracking ? "Volume" : "Mouth";
+	document.getElementById("volumeSettings").className = settings.volumeTracking ? "" : "removed";
+	document.getElementById("mouthSettings").className = settings.volumeTracking ? "removed" : "";
+}
 document.getElementById("modBtn").addEventListener("click", function() {
 	let modVal = document.getElementById('face-to-mod').value.trim();
 	modFaces(modVal, modImg)
 });
 document.getElementById("toggleBlinkBtn").addEventListener("click", function() {
-	settings.randomBlink = !settings.randomBlink
-	document.getElementById("toggleBlinkBtn").textContent = settings.randomBlink ? "Random" : "True";
-	document.getElementById("trueBlinkSettings").className = settings.randomBlink ? "removed" : "";
-	document.getElementById("randomBlinkSettings").className = settings.randomBlink ? "" : "removed";
+	settings.randomBlink = !settings.randomBlink;
+	chooseBoxes();
 });
 document.getElementById("toggleVolumeBtn").addEventListener("click", function() {
 	settings.volumeTracking = !settings.volumeTracking
-	document.getElementById("toggleVolumeBtn").textContent = settings.volumeTracking ? "Volume" : "Mouth";
-	document.getElementById("volumeSettings").className = settings.volumeTracking ? "" : "removed";
-	document.getElementById("mouthSettings").className = settings.volumeTracking ? "removed" : "";
+	chooseBoxes();
+	if (settings.volumeTracking && !volumeTrackingBeenOnBefore) startVolumeTracking();
 });
 
 img.addEventListener('change', (event) => {
@@ -294,7 +299,6 @@ function modFaces(modVal, theImg) {
 	const reader = new FileReader();
 	reader.onload = (e) => {
 		settings.faces[modVal] = e.target.result;
-		//settings.faces[modVal] = `url(${e.target.result})`;
 	};
 	reader.readAsDataURL(theImg);
 }
@@ -309,6 +313,8 @@ function importJSON() {
 		try {
 			const importedSettings = JSON.parse(e.target.result);
 			settings = importedSettings;
+			chooseBoxes();
+			if (settings.volumeTracking && !volumeTrackingBeenOnBefore) startVolumeTracking();
 		} catch (err) {
 			alert('Invalid JSON file.');
 		}
@@ -374,48 +380,49 @@ trackValue("FPS", 1, 60, "int");
 trackValue("volumeDelay", 0, 5);
 trackValue("minEyeOpen", 0, 30);
 trackValue("maxEyeOpen", 0, 30);
-// Request microphone permission and get stream
-navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-	const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-	const source = audioContext.createMediaStreamSource(stream);
 
-	// Create an analyser node
-	const analyser = audioContext.createAnalyser();
-	analyser.fftSize = 2048;
-	source.connect(analyser);
+function startVolumeTracking() {
+	volumeTrackingBeenOnBefore = true;
+	navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+		const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+		const source = audioContext.createMediaStreamSource(stream);
 
-	// Audio data array
-	const dataArray = new Uint8Array(analyser.fftSize);
+		// Create an analyser node
+		const analyser = audioContext.createAnalyser();
+		analyser.fftSize = 2048;
+		source.connect(analyser);
 
-	function getVolume() {
-		analyser.getByteTimeDomainData(dataArray);
+		// Audio data array
+		const dataArray = new Uint8Array(analyser.fftSize);
 
-		let sumSquares = 0;
-		for (const value of dataArray) {
-			const normalized = (value - 128) / 128;
-			sumSquares += normalized * normalized;
+		function getVolume() {
+			analyser.getByteTimeDomainData(dataArray);
+
+			let sumSquares = 0;
+			for (const value of dataArray) {
+				const normalized = (value - 128) / 128;
+				sumSquares += normalized * normalized;
+			}
+			vol = Math.sqrt(sumSquares / dataArray.length);
+			vol = Math.round(vol * 10000) / 10000;
+
+			document.getElementById("rms").textContent = vol;
+
+			// For animation or continuous monitoring
+			requestAnimationFrame(getVolume);
 		}
-		vol = Math.sqrt(sumSquares / dataArray.length);
-		vol = Math.round(vol * 10000) / 10000;
 
-		document.getElementById("rms").textContent = vol;
-
-		// For animation or continuous monitoring
-		requestAnimationFrame(getVolume);
-	}
-
-	getVolume();
-}).catch(err => {
-	console.error('Microphone access denied:', err);
-});
-
+		getVolume();
+	}).catch(err => {
+		console.error('Microphone access denied:', err);
+	});
+}
 
 const tweaks = document.getElementById('tweaks');
 tweaks.addEventListener('change', (event) => {
 	let thingy = event.target.value;
 	for (let i = 0; i < tweaks.options.length; i++) {
 		document.getElementById(tweaks.options[i].value + "-box").className = tweaks.options[i].value == thingy ? "" : "removed";
-		console.log('Option value:', tweaks.options[i].value);
 	}
 });
 tweaks.value = "fps";
