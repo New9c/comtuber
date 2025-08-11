@@ -1,6 +1,7 @@
 # Comtuber: the least tracking for the most expression C:
+<There should be a demo video here in the future!>
 ## Website!
-Go to [comtuber.vercel.app](comtuber.vercel.app) to give it a shot! C:<br>
+Go to [comtuber.vercel.app](https://comtuber.vercel.app) to give it a shot! C:<br>
 Deployed via vercel (duh).
 ## Running it locally
 ```sh
