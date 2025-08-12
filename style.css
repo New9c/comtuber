@@ -165,7 +165,7 @@ footer {
 
 .avatar {
 	background-color: transparent;
-	border-radius: 5px;
+	border-radius: 0px;
 }
 
 .removed {
