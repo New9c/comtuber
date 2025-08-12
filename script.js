@@ -31,6 +31,7 @@ let settings = {
 		"sn": "imgs/mhm.png",
 		"so": "imgs/haha.png",
 	},
+	"CameraId": "",
 	"FPS": 10,
 	"bgColor": "transparent",
 	"radius": "5px",
@@ -53,20 +54,43 @@ let settings = {
 	"frownThre": 0.01,
 	"puckThre": 0.4,
 }
+const cameraOptions = document.getElementById("cameras")
+async function getCameras() {
+	const devices = await navigator.mediaDevices.enumerateDevices();
+	const videoDevices = devices.filter(device => device.kind === 'videoinput');
+	if (cameraOptions.innerHTML == "") {
+		cameraOptions.innerHTML = videoDevices.map(device =>
+			`<option value="${device.deviceId}">${device.label || `Camera ${device.deviceId}`}</option>`
+		).join('');
+	}
+}
 // Before we can use HandLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
 // get everything needed to run.
-function startCam() {
-	// getUsermedia parameters.
-	const constraints = {
-		video: true
-	};
+function startCam(deviceId = "") {
+	if (deviceId) {
+		cameraOptions.value = deviceId;
+		settings.CameraId = deviceId;
+	}
+	const stream = video.srcObject;
+	if (stream) {
+		const tracks = stream.getTracks();
+		tracks.forEach(track => track.stop());
+		video.srcObject = null;
+	}
+	const constraints = deviceId
+		? { video: { deviceId: { exact: deviceId } } }
+		: { video: true };
 	// Activate the webcam stream.
 	navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
 		video.srcObject = stream;
 		video.addEventListener("loadeddata", predictWebcam);
+		getCameras();
 	});
 }
+cameraOptions.onchange = () => {
+	startCam(cameraOptions.value);
+};
 async function createFaceLandmarker() {
 	// Create Face Landmarker
 	const filesetResolver = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
@@ -320,6 +344,7 @@ function importJSON(importedJson) {
 			const importedSettings = JSON.parse(e.target.result);
 			settings = importedSettings;
 			chooseBoxes();
+			startCam(settings.CameraId);
 			if (settings.volumeTracking && !volumeTrackingBeenOnBefore) startVolumeTracking();
 		} catch (err) {
 			alert('Invalid JSON file.');
